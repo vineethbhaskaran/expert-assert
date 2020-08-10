@@ -147,6 +147,3 @@ dist
 # Ignore all local history of files
 .history
 
-#Application specific
-#dist/*
-#!dist/.gitkeep
