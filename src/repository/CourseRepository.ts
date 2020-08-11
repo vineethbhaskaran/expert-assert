@@ -3,15 +3,29 @@ import * as logger from "../logger/customLogger";
 import CustomError from "../types/CustomError";
 
 export default class CourseRepository {
-  static async getAllCourses(): Promise<any> {
+  static async getAllCourses(pageNo: number, pageSize: number, courseCount: number): Promise<any> {
+    let offset = (pageNo - 1) * pageSize;
     return new Promise((resolve, reject) => {
-      courseModel.find((error, courses) => {
+      courseModel.find({}, null, { skip: offset, limit: pageSize }, (error, courses) => {
         if (error) {
           logger.logMessage(error);
           const customError = new CustomError(400, "course-Error-001", error.message);
           reject(customError);
         }
         resolve(courses);
+      });
+    });
+  }
+
+  static async getCourseCount(): Promise<any> {
+    return new Promise((resolve, reject) => {
+      courseModel.countDocuments({ isPublished: true }, (error, count) => {
+        if (error) {
+          logger.logMessage(error);
+          const customError = new CustomError(400, "course-Error-003", error.message);
+          reject(customError);
+        }
+        resolve(count);
       });
     });
   }
@@ -28,7 +42,7 @@ export default class CourseRepository {
       courseData.save((error, dbResponse) => {
         if (error) {
           logger.logMessage(error.message);
-          const customError = new CustomError(400, "course-Error-001", error.message);
+          const customError = new CustomError(400, "course-Error-002", error.message);
           reject(customError);
         }
         logger.logMessage("Respone from DB=" + JSON.stringify(dbResponse, null, 2));

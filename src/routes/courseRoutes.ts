@@ -5,8 +5,14 @@ import CourseService from "..//service/courseService";
 const routes = Router();
 
 export const getAllCourses = routes.get("/course", async (request: Request, response: Response) => {
+  // @ts-ignore  The string[] condition will be handled automatically
+  const pageNo = parseInt(request.query.page) || 1;
+  // @ts-ignore  The string[] condition will be handled automatically
+  const pageSize = parseInt(request.query.pageSize) || 5;
   try {
-    const successResponse = await CourseService.getAllCourses();
+    const courseCount = await CourseService.getCourseCount();
+    logger.logMessage("Total records:" + courseCount);
+    const successResponse = await CourseService.getAllCourses(pageNo, pageSize, courseCount);
     return response.json(successResponse);
   } catch (errorResponse) {
     logger.logMessage(errorResponse);
