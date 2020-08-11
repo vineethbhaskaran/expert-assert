@@ -1,7 +1,7 @@
 import express, { Request, Response } from "express";
 import * as courseRoutes from "./routes/courseRoutes";
 import { port, dbConnectionUrl } from "./config";
-import mongoose, { Schema, Document } from "mongoose";
+import mongoose from "mongoose";
 import * as logger from "./logger/customLogger";
 
 const app = express();
