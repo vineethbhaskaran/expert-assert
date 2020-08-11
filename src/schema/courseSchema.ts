@@ -8,4 +8,5 @@ const courseScehma: Schema = new Schema({
   isPublished: { type: Boolean, required: true, default: false },
 });
 
-export default mongoose.model<Icourse>("course", courseScehma);
+const courseModel = mongoose.model<Icourse>("course", courseScehma);
+export { courseModel };

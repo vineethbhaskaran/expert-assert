@@ -4,16 +4,22 @@ import CourseService from "..//service/courseService";
 
 const routes = Router();
 
-export const getAllCourses = routes.get("/course", (request: Request, response: Response) => {
-  response.json({ name: "Test course 1" });
+export const getAllCourses = routes.get("/course", async (request: Request, response: Response) => {
+  try {
+    const successResponse = await CourseService.getAllCourses();
+    return response.json(successResponse);
+  } catch (errorResponse) {
+    logger.logMessage(errorResponse);
+    return response.json(errorResponse);
+  }
 });
 
 export const createCourse = routes.post("/course", async (request: Request, response: Response) => {
   try {
-    const resp = await CourseService.saveCourse(request.body);
-    return response.json(resp);
-  } catch (error) {
-    logger.logMessage(error);
-    return response.json(error);
+    const successResponse = await CourseService.saveCourse(request.body);
+    return response.json(successResponse);
+  } catch (errorResponse) {
+    logger.logMessage(errorResponse);
+    return response.json(errorResponse);
   }
 });
