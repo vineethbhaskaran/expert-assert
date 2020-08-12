@@ -5,4 +5,5 @@ export default interface Icourse extends Document {
   code: String;
   description: String;
   isPublished: Boolean;
+  isActive: Boolean;
 }

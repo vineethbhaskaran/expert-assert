@@ -6,6 +6,7 @@ const courseScehma: Schema = new Schema({
   code: { type: String, required: true, unique: true },
   description: { type: String, requied: true },
   isPublished: { type: Boolean, required: true, default: false },
+  isActive: { type: Boolean, required: true, default: true },
 });
 
 const courseModel = mongoose.model<Icourse>("course", courseScehma);

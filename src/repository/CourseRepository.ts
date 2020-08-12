@@ -6,7 +6,7 @@ export default class CourseRepository {
   static async getAllCourses(pageNo: number, pageSize: number, courseCount: number): Promise<any> {
     let offset = (pageNo - 1) * pageSize;
     return new Promise((resolve, reject) => {
-      courseModel.find({}, null, { skip: offset, limit: pageSize }, (error, courses) => {
+      courseModel.find({ isActive: true }, null, { skip: offset, limit: pageSize }, (error, courses) => {
         if (error) {
           logger.logMessage(error);
           const customError = new CustomError(400, "course-Error-001", error.message);
@@ -19,7 +19,7 @@ export default class CourseRepository {
 
   static async getCourseCount(): Promise<any> {
     return new Promise((resolve, reject) => {
-      courseModel.countDocuments({ isPublished: true }, (error, count) => {
+      courseModel.countDocuments({ isActive: true }, (error, count) => {
         if (error) {
           logger.logMessage(error);
           const customError = new CustomError(400, "course-Error-003", error.message);
