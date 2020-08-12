@@ -6,27 +6,36 @@ export default class CourseRepository {
   static async getAllCourses(pageNo: number, pageSize: number, courseCount: number): Promise<any> {
     let offset = (pageNo - 1) * pageSize;
     return new Promise((resolve, reject) => {
-      courseModel.find({ isActive: true }, null, { skip: offset, limit: pageSize }, (error, courses) => {
-        if (error) {
-          logger.logMessage(error);
-          const customError = new CustomError(400, "course-Error-001", error.message);
-          reject(customError);
-        }
-        resolve(courses);
-      });
+      courseModel
+        .find()
+        .where({ isActive: true })
+        .skip(offset)
+        .limit(pageSize)
+        .sort({ code: "asc" })
+        .exec((error, courses) => {
+          if (error) {
+            logger.logMessage(error.message);
+            const customError = new CustomError(400, "course-Error-001", error.message);
+            reject(customError);
+          }
+          resolve(courses);
+        });
     });
   }
 
   static async getCourseCount(): Promise<any> {
     return new Promise((resolve, reject) => {
-      courseModel.countDocuments({ isActive: true }, (error, count) => {
-        if (error) {
-          logger.logMessage(error);
-          const customError = new CustomError(400, "course-Error-003", error.message);
-          reject(customError);
-        }
-        resolve(count);
-      });
+      courseModel
+        .countDocuments()
+        .where({ isActive: true })
+        .exec((error, count) => {
+          if (error) {
+            logger.logMessage(error.message);
+            const customError = new CustomError(400, "course-Error-003", error.message);
+            reject(customError);
+          }
+          resolve(count);
+        });
     });
   }
 
