@@ -3,6 +3,7 @@ import * as logger from "../logger/customLogger";
 import CourseService from "..//service/courseService";
 import { ResponseUtils } from "../util/ResponseUtil";
 import { DEFAULT_PAGE_NUMBER, DEFAULT_PAGE_SIZE } from "../constants/constants";
+import Icourse from "../types/Icourse";
 
 const routes = Router();
 
@@ -10,7 +11,7 @@ const routes = Router();
  * Route to get all courses available.The response data is with the pagination
  *  details.
  */
-export const getAllCourses = routes.get("/course", async (request: Request, response: Response) => {
+export const getAllCourses = routes.get("/courses", async (request: Request, response: Response) => {
   // @ts-ignore  The string[] condition will be handled automatically
   const pageNo = parseInt(request.query.page) || DEFAULT_PAGE_NUMBER;
   // @ts-ignore  The string[] condition will be handled automatically
@@ -29,12 +30,37 @@ export const getAllCourses = routes.get("/course", async (request: Request, resp
     return response.json(errorResponse);
   }
 });
+
+export const getCourseByCode = routes.get("/courses/:courseId", async (request: Request, response: Response) => {
+  const courseId = request.params.courseId;
+  try {
+    const courseObject = await CourseService.getCourseById(courseId);
+    return response.json(courseObject);
+  } catch (errorResponse) {
+    logger.logMessage(errorResponse);
+    return response.json(errorResponse);
+  }
+});
+
 /**
  * This POST method creates the course
  */
-export const createCourse = routes.post("/course", async (request: Request, response: Response) => {
+export const createCourse = routes.post("/courses", async (request: Request, response: Response) => {
   try {
-    const successResponse = await CourseService.saveCourse(request.body);
+    const course = <Icourse>request.body;
+    const successResponse = await CourseService.saveCourse(course);
+    return response.json(successResponse);
+  } catch (errorResponse) {
+    logger.logMessage(errorResponse);
+    return response.json(errorResponse);
+  }
+});
+
+export const updateCourse = routes.put("/courses/:courseId", async (request: Request, response: Response) => {
+  const course = <Icourse>request.body;
+  course.id = request.params.courseId;
+  try {
+    const successResponse = await CourseService.updateCourse(course);
     return response.json(successResponse);
   } catch (errorResponse) {
     logger.logMessage(errorResponse);

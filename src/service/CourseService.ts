@@ -8,7 +8,14 @@ export default class CourseService {
   static async getCourseCount(): Promise<any> {
     return CourseRepository.getCourseCount();
   }
-  static async saveCourse(course: any): Promise<any> {
+  static async getCourseById(courseId: string): Promise<any> {
+    return CourseRepository.getCourseById(courseId);
+  }
+  static async saveCourse(course: Icourse): Promise<any> {
     return CourseRepository.saveCourse(course);
+  }
+
+  static async updateCourse(course: Icourse): Promise<any> {
+    return CourseRepository.updateCourse(course);
   }
 }
