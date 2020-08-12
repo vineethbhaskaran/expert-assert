@@ -8,6 +8,7 @@ export default class CourseRepository {
     return new Promise((resolve, reject) => {
       courseModel
         .find()
+        .select({ code: 1, name: 1, description: 1 })
         .where({ isActive: true })
         .skip(offset)
         .limit(pageSize)
