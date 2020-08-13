@@ -13,7 +13,10 @@ const init = async () => {
     logger.logMessage("successfully connected to DB");
     app.use(express.json());
     app.use(courseRoutes.getAllCourses);
+    app.use(courseRoutes.getCourseByCode);
     app.use(courseRoutes.createCourse);
+    app.use(courseRoutes.updateCourse);
+    app.use(courseRoutes.deleteCourse);
     app.listen(port, () => {
       logger.logMessage("The application is listening to port:" + port);
     });

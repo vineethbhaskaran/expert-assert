@@ -67,7 +67,7 @@ export const updateCourse = routes.put("/courses/:courseId", async (request: Req
     return response.json(errorResponse);
   }
 });
-export const DeleteCourse = routes.delete("/courses/:courseId", async (request: Request, response: Response) => {
+export const deleteCourse = routes.delete("/courses/:courseId", async (request: Request, response: Response) => {
   const courseId = request.params.courseId;
   try {
     const courseObject = await CourseService.softDeleteCourse(courseId);
