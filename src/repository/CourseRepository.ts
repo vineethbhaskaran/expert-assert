@@ -46,7 +46,7 @@ export default class CourseRepository {
       courseModel
         .find()
         .select({ code: 1, name: 1, description: 1 })
-        .where({ _id: courseId })
+        .where({ _id: courseId, isActive: true })
         .exec((error, courses) => {
           if (error) {
             logger.logMessage(error.message);
@@ -90,6 +90,21 @@ export default class CourseRepository {
         }
         logger.logMessage("Respone from DB=" + JSON.stringify(dbResponse, null, 2));
         resolve(dbResponse);
+      });
+    });
+  }
+
+  static async softDeleteCourse(courseId: string): Promise<any> {
+    return new Promise((resolve, reject) => {
+      const filter = { _id: courseId };
+      courseModel.findOneAndUpdate(filter, { isActive: false }, (error, dbResponse) => {
+        if (error) {
+          logger.logMessage(error.message);
+          const customError = new CustomError(400, "course-Error-004", error.message);
+          reject(customError);
+        }
+        logger.logMessage("Respone from DB=" + JSON.stringify(dbResponse, null, 2));
+        resolve(true);
       });
     });
   }

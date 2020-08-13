@@ -67,3 +67,13 @@ export const updateCourse = routes.put("/courses/:courseId", async (request: Req
     return response.json(errorResponse);
   }
 });
+export const DeleteCourse = routes.delete("/courses/:courseId", async (request: Request, response: Response) => {
+  const courseId = request.params.courseId;
+  try {
+    const courseObject = await CourseService.softDeleteCourse(courseId);
+    return response.json(courseObject);
+  } catch (errorResponse) {
+    logger.logMessage(errorResponse);
+    return response.json(errorResponse);
+  }
+});

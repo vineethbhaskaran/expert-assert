@@ -18,4 +18,8 @@ export default class CourseService {
   static async updateCourse(course: Icourse): Promise<any> {
     return CourseRepository.updateCourse(course);
   }
+
+  static async softDeleteCourse(courseId: string): Promise<any> {
+    return CourseRepository.softDeleteCourse(courseId);
+  }
 }
