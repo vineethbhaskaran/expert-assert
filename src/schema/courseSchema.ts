@@ -1,6 +1,6 @@
 import mongoose, { Schema } from "mongoose";
-import Icourse from "../types/Icourse";
 import { auditSchema } from "./auditSchema";
+import Course from "../types/Course";
 
 const courseScehma: Schema = new Schema({
   name: { type: String, required: true },
@@ -11,5 +11,5 @@ const courseScehma: Schema = new Schema({
 });
 //adding audit schema to course schema
 courseScehma.add(auditSchema);
-const courseModel = mongoose.model<Icourse>("course", courseScehma);
+const courseModel = mongoose.model<Course>("course", courseScehma);
 export { courseModel };

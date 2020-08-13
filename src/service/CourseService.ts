@@ -1,5 +1,5 @@
 import CourseRepository from "../repository/CourseRepository";
-import Icourse from "../types/Icourse";
+import Course from "../types/Course";
 
 export default class CourseService {
   static async getAllCourses(pageNo: number, pageSize: number, courseCount: number): Promise<any> {
@@ -11,11 +11,11 @@ export default class CourseService {
   static async getCourseById(courseId: string): Promise<any> {
     return CourseRepository.getCourseById(courseId);
   }
-  static async saveCourse(course: Icourse): Promise<any> {
+  static async saveCourse(course: Course): Promise<any> {
     return CourseRepository.saveCourse(course);
   }
 
-  static async updateCourse(course: Icourse): Promise<any> {
+  static async updateCourse(course: Course): Promise<any> {
     return CourseRepository.updateCourse(course);
   }
 

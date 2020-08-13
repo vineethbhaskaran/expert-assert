@@ -1,7 +1,7 @@
 import { courseModel } from "../schema/courseSchema";
 import * as logger from "../logger/customLogger";
 import CustomError from "../types/CustomError";
-import Icourse from "../types/Icourse";
+import Course from "../types/Course";
 
 export default class CourseRepository {
   static async getAllCourses(pageNo: number, pageSize: number, courseCount: number): Promise<any> {
@@ -14,7 +14,7 @@ export default class CourseRepository {
         .skip(offset)
         .limit(pageSize)
         .sort({ code: "asc" })
-        .exec((error, courses) => {
+        .exec((error: any, courses: any) => {
           if (error) {
             logger.logMessage(error.message);
             const customError = new CustomError(400, "course-Error-001", error.message);
@@ -30,7 +30,7 @@ export default class CourseRepository {
       courseModel
         .countDocuments()
         .where({ isActive: true })
-        .exec((error, count) => {
+        .exec((error: any, count: any) => {
           if (error) {
             logger.logMessage(error.message);
             const customError = new CustomError(400, "course-Error-003", error.message);
@@ -47,7 +47,7 @@ export default class CourseRepository {
         .find()
         .select({ code: 1, name: 1, description: 1 })
         .where({ _id: courseId, isActive: true })
-        .exec((error, courses) => {
+        .exec((error: any, courses: any) => {
           if (error) {
             logger.logMessage(error.message);
             const customError = new CustomError(400, "course-Error-001", error.message);
@@ -64,25 +64,25 @@ export default class CourseRepository {
    * save method
    * @param course
    */
-  static async saveCourse(course: Icourse): Promise<any> {
+  static async saveCourse(course: Course): Promise<any> {
     const courseData = new courseModel(course);
     return new Promise((resolve, reject) => {
-      courseData.save((error, dbResponse) => {
+      courseData.save((error: any, dbResponse: any) => {
         if (error) {
           logger.logMessage(error.message);
           const customError = new CustomError(400, "course-Error-002", error.message);
           reject(customError);
         }
         logger.logMessage("Respone from DB=" + JSON.stringify(dbResponse, null, 2));
-        resolve(dbResponse);
+        resolve(true);
       });
     });
   }
 
-  static async updateCourse(course: Icourse): Promise<any> {
+  static async updateCourse(course: Course): Promise<any> {
     return new Promise((resolve, reject) => {
       const filter = { _id: course.id };
-      courseModel.update(filter, course, (error, dbResponse) => {
+      courseModel.update(filter, course, (error: any, dbResponse: any) => {
         if (error) {
           logger.logMessage(error.message);
           const customError = new CustomError(400, "course-Error-004", error.message);
@@ -97,7 +97,7 @@ export default class CourseRepository {
   static async softDeleteCourse(courseId: string): Promise<any> {
     return new Promise((resolve, reject) => {
       const filter = { _id: courseId };
-      courseModel.findOneAndUpdate(filter, { isActive: false }, (error, dbResponse) => {
+      courseModel.findOneAndUpdate(filter, { isActive: false }, (error: any, dbResponse: any) => {
         if (error) {
           logger.logMessage(error.message);
           const customError = new CustomError(400, "course-Error-004", error.message);

@@ -1,7 +1,6 @@
-import { Document } from "mongoose";
 import AuditFields from "./AuditFields";
 
-export default interface Icourse extends AuditFields {
+export default interface Course extends AuditFields {
   name: String;
   code: String;
   description: String;

@@ -3,7 +3,7 @@ import * as logger from "../logger/customLogger";
 import CourseService from "..//service/courseService";
 import { ResponseUtils } from "../util/ResponseUtil";
 import { DEFAULT_PAGE_NUMBER, DEFAULT_PAGE_SIZE } from "../constants/constants";
-import Icourse from "../types/Icourse";
+import Course from "../types/Course";
 
 const routes = Router();
 
@@ -47,7 +47,7 @@ export const getCourseByCode = routes.get("/courses/:courseId", async (request: 
  */
 export const createCourse = routes.post("/courses", async (request: Request, response: Response) => {
   try {
-    const course = <Icourse>request.body;
+    const course = <Course>request.body;
     const successResponse = await CourseService.saveCourse(course);
     return response.json(successResponse);
   } catch (errorResponse) {
@@ -57,7 +57,7 @@ export const createCourse = routes.post("/courses", async (request: Request, res
 });
 
 export const updateCourse = routes.put("/courses/:courseId", async (request: Request, response: Response) => {
-  const course = <Icourse>request.body;
+  const course = <Course>request.body;
   course.id = request.params.courseId;
   try {
     const successResponse = await CourseService.updateCourse(course);
