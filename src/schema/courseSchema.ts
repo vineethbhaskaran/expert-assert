@@ -11,5 +11,5 @@ export const courseScehma: Schema = new Schema({
 });
 //adding audit schema to course schema
 courseScehma.add(auditSchema);
-const courseModel = mongoose.model<Course>("course", courseScehma);
+const courseModel = mongoose.model<Course>("courseSchema", courseScehma);
 export { courseModel };

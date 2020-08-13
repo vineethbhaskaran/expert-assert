@@ -10,5 +10,5 @@ const auditSchema: Schema = new Schema(
     timestamps: true,
   }
 );
-const auditModel = mongoose.model<AuditFields>("auditDetails", auditSchema);
+const auditModel = mongoose.model<AuditFields>("auditSchema", auditSchema);
 export { auditSchema, auditModel };
