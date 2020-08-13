@@ -2,7 +2,7 @@ import mongoose, { Schema } from "mongoose";
 import { auditSchema } from "./auditSchema";
 import Course from "../types/Course";
 
-const courseScehma: Schema = new Schema({
+export const courseScehma: Schema = new Schema({
   name: { type: String, required: true },
   code: { type: String, required: true, unique: true },
   description: { type: String, requied: true },

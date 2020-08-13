@@ -31,7 +31,7 @@ export const getAllCourses = routes.get("/courses", async (request: Request, res
   }
 });
 
-export const getCourseByCode = routes.get("/courses/:courseId", async (request: Request, response: Response) => {
+export const getCourseById = routes.get("/courses/:courseId", async (request: Request, response: Response) => {
   const courseId = request.params.courseId;
   try {
     const courseObject = await CourseService.getCourseById(courseId);

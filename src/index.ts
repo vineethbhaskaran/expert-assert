@@ -1,5 +1,6 @@
 import express, { Request, Response } from "express";
 import * as courseRoutes from "./routes/courseRoutes";
+import * as sectionRoutes from "./routes/sectionRoutes";
 import { port, dbConnectionUrl } from "./config";
 import mongoose from "mongoose";
 import * as logger from "./logger/customLogger";
@@ -13,10 +14,12 @@ const init = async () => {
     logger.logMessage("successfully connected to DB");
     app.use(express.json());
     app.use(courseRoutes.getAllCourses);
-    app.use(courseRoutes.getCourseByCode);
+    app.use(courseRoutes.getCourseById);
     app.use(courseRoutes.createCourse);
     app.use(courseRoutes.updateCourse);
     app.use(courseRoutes.deleteCourse);
+    app.use(sectionRoutes.createSection);
+
     app.listen(port, () => {
       logger.logMessage("The application is listening to port:" + port);
     });
