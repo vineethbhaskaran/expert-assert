@@ -2,6 +2,15 @@ import { courseModel } from "../schema/courseSchema";
 import * as logger from "../logger/customLogger";
 import CustomError from "../types/CustomError";
 import Course from "../types/Course";
+import {
+  COURSE_CREATION_ERROR,
+  COURSE_RETRIEVE_ALL_ERROR,
+  COURSE_RETRIEVE_BY_ID_ERROR,
+  COURSE_COUNT_ERROR,
+  COURSE_UPDATION_ERROR,
+  COURSE_DELETION_ERROR,
+} from "../constants/errorConstants";
+import { STATUS_CODE_400 } from "../constants/constants";
 
 export default class CourseRepository {
   static async getAllCourses(pageNo: number, pageSize: number, courseCount: number): Promise<any> {
@@ -17,7 +26,11 @@ export default class CourseRepository {
         .exec((error: any, courses: any) => {
           if (error) {
             logger.logMessage(error.message);
-            const customError = new CustomError(400, "course-Error-001", error.message);
+            const customError = new CustomError(
+              STATUS_CODE_400,
+              COURSE_RETRIEVE_ALL_ERROR.label,
+              COURSE_RETRIEVE_ALL_ERROR.details
+            );
             reject(customError);
           }
           resolve(courses);
@@ -33,7 +46,7 @@ export default class CourseRepository {
         .exec((error: any, count: any) => {
           if (error) {
             logger.logMessage(error.message);
-            const customError = new CustomError(400, "course-Error-003", error.message);
+            const customError = new CustomError(STATUS_CODE_400, COURSE_COUNT_ERROR.label, COURSE_COUNT_ERROR.details);
             reject(customError);
           }
           resolve(count);
@@ -50,7 +63,11 @@ export default class CourseRepository {
         .exec((error: any, courses: any) => {
           if (error) {
             logger.logMessage(error.message);
-            const customError = new CustomError(400, "course-Error-001", error.message);
+            const customError = new CustomError(
+              STATUS_CODE_400,
+              COURSE_RETRIEVE_BY_ID_ERROR.label,
+              COURSE_RETRIEVE_BY_ID_ERROR.details
+            );
             reject(customError);
           }
           resolve(courses);
@@ -70,7 +87,11 @@ export default class CourseRepository {
       courseData.save((error: any, dbResponse: any) => {
         if (error) {
           logger.logMessage(error.message);
-          const customError = new CustomError(400, "course-Error-002", error.message);
+          const customError = new CustomError(
+            STATUS_CODE_400,
+            COURSE_CREATION_ERROR.label,
+            COURSE_CREATION_ERROR.details
+          );
           reject(customError);
         }
         logger.logMessage("Respone from DB=" + JSON.stringify(dbResponse, null, 2));
@@ -85,7 +106,11 @@ export default class CourseRepository {
       courseModel.update(filter, course, (error: any, dbResponse: any) => {
         if (error) {
           logger.logMessage(error.message);
-          const customError = new CustomError(400, "course-Error-004", error.message);
+          const customError = new CustomError(
+            STATUS_CODE_400,
+            COURSE_UPDATION_ERROR.label,
+            COURSE_UPDATION_ERROR.details
+          );
           reject(customError);
         }
         logger.logMessage("Respone from DB=" + JSON.stringify(dbResponse, null, 2));
@@ -100,7 +125,11 @@ export default class CourseRepository {
       courseModel.findOneAndUpdate(filter, { isActive: false }, (error: any, dbResponse: any) => {
         if (error) {
           logger.logMessage(error.message);
-          const customError = new CustomError(400, "course-Error-004", error.message);
+          const customError = new CustomError(
+            STATUS_CODE_400,
+            COURSE_DELETION_ERROR.label,
+            COURSE_DELETION_ERROR.details
+          );
           reject(customError);
         }
         logger.logMessage("Respone from DB=" + JSON.stringify(dbResponse, null, 2));

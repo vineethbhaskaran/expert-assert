@@ -1,55 +1,52 @@
-import Section from "../types/Section";
-import * as logger from "../logger/customLogger";
-import { sectionModel } from "../schema/SectionSchema";
+import { lessonModel } from "../schema/lessonSchema";
 import CustomError from "../types/CustomError";
+import * as logger from "../logger/customLogger";
+import Lesson from "../types/Lesson";
 import {
-  SECTION_CREATION_ERROR,
-  SECTION_RETRIEVE_ALL_ERROR,
-  SECTION_RETRIEVE_BY_ID_ERROR,
-  SECTION_COUNT_ERROR,
-  SECTION_UPDATION_ERROR,
-  SECTION_DELETION_ERROR,
+  LESSON_CREATION_ERROR,
+  LESSON_RETRIEVE_ALL_ERROR,
+  LESSON_RETRIEVE_BY_ID_ERROR,
+  LESSON_COUNT_ERROR,
+  LESSON_UPDATION_ERROR,
+  LESSON_DELETION_ERROR,
 } from "../constants/errorConstants";
 import { STATUS_CODE_400 } from "../constants/constants";
 
-export default class SectionRepository {
-  static async getAllSections(pageNo: number, pageSize: number, sectionCount: number): Promise<any> {
+export default class LessonRepository {
+  static async getAllLessons(pageNo: number, pageSize: number, lessonCount: number): Promise<any> {
     let offset = (pageNo - 1) * pageSize;
     return new Promise((resolve, reject) => {
-      sectionModel
+      lessonModel
         .find()
-        .select({ name: 1, sectionNumber: 1, numberOfSessions: 1 })
+        .select({ name: 1, sequence: 1, contents: 1, courseId: 1, sectionId: 1 })
         .where({ isActive: true })
         .skip(offset)
         .limit(pageSize)
-        .sort({ name: "asc" })
-        .exec((error: any, sections: any) => {
+        .sort({ sequence: "asc" })
+        .exec((error: any, lessons: any) => {
           if (error) {
             logger.logMessage(error.message);
             const customError = new CustomError(
               STATUS_CODE_400,
-              SECTION_RETRIEVE_ALL_ERROR.label,
-              SECTION_RETRIEVE_ALL_ERROR.details
+              LESSON_RETRIEVE_ALL_ERROR.label,
+              LESSON_RETRIEVE_ALL_ERROR.details
             );
             reject(customError);
           }
-          resolve(sections);
+          resolve(lessons);
         });
     });
   }
-  static async getSectionCount(): Promise<any> {
+
+  static async getLessonCount(): Promise<any> {
     return new Promise((resolve, reject) => {
-      sectionModel
+      lessonModel
         .countDocuments()
         .where({ isActive: true })
         .exec((error: any, count: any) => {
           if (error) {
             logger.logMessage(error.message);
-            const customError = new CustomError(
-              STATUS_CODE_400,
-              SECTION_COUNT_ERROR.label,
-              SECTION_COUNT_ERROR.details
-            );
+            const customError = new CustomError(STATUS_CODE_400, LESSON_COUNT_ERROR.label, LESSON_COUNT_ERROR.details);
             reject(customError);
           }
           resolve(count);
@@ -57,36 +54,37 @@ export default class SectionRepository {
     });
   }
 
-  static async getSectionById(sectionId: string): Promise<any> {
+  static async getLessonById(lessonId: string): Promise<any> {
     return new Promise((resolve, reject) => {
-      sectionModel
+      lessonModel
         .find()
-        .select({ name: 1, sectionNumber: 1, numberOfSessions: 1 })
-        .where({ _id: sectionId, isActive: true })
-        .exec((error: any, sections: any) => {
+        .select({ name: 1, sequence: 1, contents: 1, courseId: 1, sectionId: 1 })
+        .where({ _id: lessonId, isActive: true })
+        .exec((error: any, lessons: any) => {
           if (error) {
             logger.logMessage(error.message);
             const customError = new CustomError(
               STATUS_CODE_400,
-              SECTION_RETRIEVE_BY_ID_ERROR.label,
-              SECTION_RETRIEVE_BY_ID_ERROR.details
+              LESSON_RETRIEVE_BY_ID_ERROR.label,
+              LESSON_RETRIEVE_BY_ID_ERROR.details
             );
             reject(customError);
           }
-          resolve(sections);
+          resolve(lessons);
         });
     });
   }
-  static async saveSection(section: Section): Promise<any> {
-    const sectionData = new sectionModel(section);
+
+  static async saveLesson(lesson: Lesson): Promise<any> {
+    const lessonData = new lessonModel(lesson);
     return new Promise((resolve, reject) => {
-      sectionData.save((error: any, dbResponse: any) => {
+      lessonData.save((error: any, dbResponse: any) => {
         if (error) {
           logger.logMessage(error.message);
           const customError = new CustomError(
             STATUS_CODE_400,
-            SECTION_CREATION_ERROR.label,
-            SECTION_CREATION_ERROR.details
+            LESSON_CREATION_ERROR.label,
+            LESSON_CREATION_ERROR.details
           );
           reject(customError);
         }
@@ -95,16 +93,17 @@ export default class SectionRepository {
       });
     });
   }
-  static async updateSection(section: Section): Promise<any> {
+
+  static async updateLesson(lesson: Lesson): Promise<any> {
     return new Promise((resolve, reject) => {
-      const filter = { _id: section.id };
-      sectionModel.update(filter, section, (error: any, dbResponse: any) => {
+      const filter = { _id: lesson.id };
+      lessonModel.update(filter, lesson, (error: any, dbResponse: any) => {
         if (error) {
           logger.logMessage(error.message);
           const customError = new CustomError(
             STATUS_CODE_400,
-            SECTION_UPDATION_ERROR.label,
-            SECTION_UPDATION_ERROR.details
+            LESSON_UPDATION_ERROR.label,
+            LESSON_UPDATION_ERROR.details
           );
           reject(customError);
         }
@@ -113,17 +112,16 @@ export default class SectionRepository {
       });
     });
   }
-
-  static async softDeleteSection(sectionId: string): Promise<any> {
+  static async softDeleteLesson(lessonId: string): Promise<any> {
     return new Promise((resolve, reject) => {
-      const filter = { _id: sectionId };
-      sectionModel.findOneAndUpdate(filter, { isActive: false }, (error: any, dbResponse: any) => {
+      const filter = { _id: lessonId };
+      lessonModel.findOneAndUpdate(filter, { isActive: false }, (error: any, dbResponse: any) => {
         if (error) {
           logger.logMessage(error.message);
           const customError = new CustomError(
             STATUS_CODE_400,
-            SECTION_DELETION_ERROR.label,
-            SECTION_DELETION_ERROR.details
+            LESSON_DELETION_ERROR.label,
+            LESSON_DELETION_ERROR.details
           );
           reject(customError);
         }

@@ -7,5 +7,5 @@ export default interface Section extends AuditFields {
   sectionNumber: number;
   course: String;
   numberOfSessions: number;
-  isActive: Boolean;
+  isActive: boolean;
 }
