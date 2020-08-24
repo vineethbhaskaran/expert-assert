@@ -6,6 +6,7 @@ export const lessonSchema: Schema = new Schema({
   name: { type: String, required: true },
   sequence: { type: Number, required: true },
   contents: { type: String },
+  fileLocation: { type: String },
   sectionId: { type: Schema.Types.ObjectId, ref: "sectionSchema" },
   courseId: { type: Schema.Types.ObjectId, ref: "courseSchema" },
   isActive: { type: Boolean, required: true, default: true },

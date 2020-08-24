@@ -5,6 +5,7 @@ import * as lessonRoutes from "./routes/lessonRoute";
 import { port, dbConnectionUrl } from "./config";
 import mongoose from "mongoose";
 import * as logger from "./logger/customLogger";
+import bodyParser from "body-parser";
 
 const app = express();
 
@@ -14,6 +15,7 @@ const init = async () => {
     await dbConnect();
     logger.logMessage("successfully connected to DB");
     app.use(express.json());
+    app.use(bodyParser.raw());
     //Registering course
     app.use(courseRoutes.getAllCourses);
     app.use(courseRoutes.getCourseById);
