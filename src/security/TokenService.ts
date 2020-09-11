@@ -1,7 +1,10 @@
 import jwt from "jsonwebtoken";
-import { JWT_ACCESS_TOKEN_SECRET, JWT_TIMEOUT_IN_SECONDS, JWT_REFRESH_TOKEN_SECRET } from "../config";
+import config from "../config";
 import { Request, Response } from "express";
 
+const JWT_ACCESS_TOKEN_SECRET = config.security.JWT_ACCESS_TOKEN_SECRET;
+const JWT_REFRESH_TOKEN_SECRET = config.security.JWT_REFRESH_TOKEN_SECRET;
+const JWT_TIMEOUT_IN_SECONDS = config.security.JWT_TIMEOUT_IN_SECONDS;
 export default class TokenService {
   static generateAccessToken(user: Object) {
     return jwt.sign(user, JWT_ACCESS_TOKEN_SECRET, { expiresIn: JWT_TIMEOUT_IN_SECONDS });

@@ -1,11 +1,11 @@
 import { Router, Request, Response } from "express";
 import jwt from "jsonwebtoken";
-import { JWT_REFRESH_TOKEN_SECRET } from "../config";
+import config from "../config";
 import TokenService from "../security/TokenService";
 const routes = Router();
 
 let refreshTokens: string[] = [];
-
+const JWT_REFRESH_TOKEN_SECRET = config.security.JWT_REFRESH_TOKEN_SECRET;
 export const login = routes.post("/login", (request: Request, response: Response) => {
   const email = request.body.email;
   const user = { email: email };

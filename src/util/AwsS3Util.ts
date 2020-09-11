@@ -1,6 +1,10 @@
-import { AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, AWS_S3_BUCKET_NAME } from "../config";
+import config from "../config";
 import AWS from "aws-sdk";
 import * as logger from "../logger/customLogger";
+
+const AWS_ACCESS_KEY_ID=config.aws.AWS_ACCESS_KEY_ID;
+const AWS_SECRET_ACCESS_KEY=config.aws.AWS_SECRET_ACCESS_KEY;
+const AWS_S3_BUCKET_NAME=config.aws.AWS_S3_BUCKET_NAME;
 
 export default class AwsS3Util {
   static readonly s3 = new AWS.S3({
