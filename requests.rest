@@ -5,7 +5,28 @@ content-type: application/json
 {
     "name": "Node course",
             "code": "Node-001",
+            "description": "This is a comprehensive course for NodeJS"
+}
+
+###
+
+POST http://localhost:3000/courses HTTP/1.1
+content-type: application/json
+
+{
+    "name": "Java course",
+            "code": "Java-001",
             "description": "This is a comprehensive course for Java"
+}
+
+###
+POST http://localhost:3000/courses HTTP/1.1
+content-type: application/json
+
+{
+    "name": "Python course",
+            "code": "Python-001",
+            "description": "This is a comprehensive course for Python"
 }
 
 

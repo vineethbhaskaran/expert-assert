@@ -7,6 +7,7 @@ import { port, dbConnectionUrl } from "./config";
 import mongoose from "mongoose";
 import * as logger from "./logger/customLogger";
 import bodyParser from "body-parser";
+import cors from 'cors';
 
 const app = express();
 
@@ -17,6 +18,8 @@ const init = async () => {
     logger.logMessage("successfully connected to DB");
     app.use(express.json());
     app.use(bodyParser.raw());
+    //cors configuration
+    app.use(cors());
     //JWT token routes
     app.use(loginRoutes.login);
     app.use(loginRoutes.token);
@@ -34,6 +37,8 @@ const init = async () => {
     app.use(sectionRoutes.deleteSection);
     //Registering session
     app.use(lessonRoutes.createLesson);
+
+    
 
     app.listen(port, () => {
       logger.logMessage("The application is listening to port:" + port);
