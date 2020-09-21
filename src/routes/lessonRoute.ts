@@ -6,6 +6,7 @@ import { DEFAULT_PAGE_NUMBER, DEFAULT_PAGE_SIZE } from "../constants/constants";
 import { ResponseUtils } from "../util/ResponseUtil";
 import multer from "multer";
 import AwsS3Util from "../util/AwsS3Util";
+import path from "path";
 
 const lessonRoutes = Router();
 
@@ -80,7 +81,7 @@ export const deleteLesson = lessonRoutes.delete("/lessons/:lessonId", async (req
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     AwsS3Util.uploadToS3(file);
-    cb(null, "../../temp");
+    cb(null, process.cwd() + "/temp");
   },
   filename: (req, file, cb) => {
     cb(null, file.originalname);
@@ -95,7 +96,7 @@ export const uploadLesson = lessonRoutes.post(
   "/lessons/upload",
   upload.single("file-to-upload"),
   (request: Request, response: Response) => {
-    AwsS3Util.uploadToS3(request.file);
+    // AwsS3Util.uploadToS3(request.file);
     logger.logMessage("Title name:" + request.body.title);
     return response.json(true);
   }

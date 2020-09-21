@@ -1,0 +1,54 @@
+###
+POST http://localhost:3000/courses HTTP/1.1
+content-type: application/json
+
+{
+    "name": "Node course",
+            "code": "Node-001",
+            "description": "This is a comprehensive course for NodeJS"
+}
+
+###
+
+POST http://localhost:3000/courses HTTP/1.1
+content-type: application/json
+
+{
+    "name": "Java course",
+            "code": "Java-001",
+            "description": "This is a comprehensive course for Java"
+}
+
+###
+POST http://localhost:3000/courses HTTP/1.1
+content-type: application/json
+
+{
+    "name": "Python course",
+            "code": "Python-001",
+            "description": "This is a comprehensive course for Python"
+}
+
+
+### Get all courses
+GET http://localhost:3000/courses
+
+###
+
+POST http://localhost:3000/login HTTP/1.1
+content-type: application/json
+
+{
+    "email": "vineeth@test.com"
+}
+
+###
+
+POST http://localhost:3000/token HTTP/1.1
+content-type: application/json
+
+{
+    "token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InZpbmVldGhAdGVzdC5jb20iLCJpYXQiOjE1OTg1MTMzNDR9.0Jbjc5QY91E-7ngl9MPTCwRf1_4jE4Z_t92qeA3ra_Q"
+}
+
+
