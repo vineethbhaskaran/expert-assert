@@ -8,11 +8,25 @@ import * as logger from "./logger/customLogger";
 import bodyParser from "body-parser";
 import cors from 'cors';
 import environmentToExport from "./config";
+import jwt from 'express-jwt';
+import jwks from 'jwks-rsa';
 
 const app = express();
 
 const port= environmentToExport.app.port;
 const dbConnectionUrl=environmentToExport.db.dbConnectionUrl;
+
+const jwtCheck = jwt({
+  secret: jwks.expressJwtSecret({
+      cache: true,
+      rateLimit: true,
+      jwksRequestsPerMinute: 5,
+      jwksUri: 'https://vineeth-tenant.us.auth0.com/.well-known/jwks.json'
+}),
+audience: 'https://vineeth-express-app',
+issuer: 'https://vineeth-tenant.us.auth0.com/',
+algorithms: ['RS256']
+});
 
 //This initialize all routes and start listening to the application
 const init = async () => {
@@ -26,8 +40,9 @@ const init = async () => {
     app.use(cors());
     
     //JWT token routes
-    app.use(loginRoutes.login);
-    app.use(loginRoutes.token);
+    //app.use(loginRoutes.login);
+    //app.use(loginRoutes.token);
+    app.use(jwtCheck);
 
     //Registering course
     app.use(courseRoutes.getAllCourses);

@@ -14,7 +14,6 @@ const routes = Router();
  */
 export const getAllCourses = routes.get(
   "/courses",
-  TokenService.verifyToken,
   async (request: Request, response: Response) => {
     // @ts-ignore  The string[] condition will be handled automatically
     const pageNo = parseInt(request.query.page) || DEFAULT_PAGE_NUMBER;
@@ -52,7 +51,6 @@ export const getCourseById = routes.get("/courses/:courseId", async (request: Re
  */
 export const createCourse = routes.post(
   "/courses",
-  TokenService.verifyToken,
   async (request: Request, response: Response) => {
     try {
       const course = <Course>request.body;
