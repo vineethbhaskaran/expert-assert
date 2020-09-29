@@ -17,10 +17,11 @@ export const getAllCourses = routes.get(
   async (request: Request, response: Response) => {
     // @ts-ignore  The string[] condition will be handled automatically
     const pageNo = parseInt(request.query.page) || DEFAULT_PAGE_NUMBER;
-    // @ts-ignore  The string[] condition will be handled automatically
-    const pageSize = parseInt(request.query.pageSize) || DEFAULT_PAGE_SIZE;
+    
     try {
       const courseCount = await CourseService.getCourseCount();
+      // @ts-ignore  The string[] condition will be handled automatically
+    const pageSize = parseInt(request.query.pageSize) || courseCount;
       const data = await CourseService.getAllCourses(pageNo, pageSize, courseCount);
       const paginationDetails = ResponseUtils.retreivePaginationDetails(pageNo, pageSize, courseCount);
       const successResponse = {
