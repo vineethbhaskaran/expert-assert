@@ -37,11 +37,57 @@ export default class SectionRepository {
         });
     });
   }
+
+  static async getSectionsByCourse(pageNo: number, pageSize: number, sectionCount: number,courseId: string): Promise<any> {
+    let offset = (pageNo - 1) * pageSize;
+    return new Promise((resolve, reject) => {
+      sectionModel
+        .find()
+        .select({ name: 1, sectionNumber: 1, numberOfSessions: 1 })
+        .where({ isActive: true,course: courseId})
+        .skip(offset)
+        .limit(pageSize)
+        .sort({ name: "asc" })
+        .exec((error: any, sections: any) => {
+          if (error) {
+            logger.logMessage(error.message);
+            const customError = new CustomError(
+              STATUS_CODE_400,
+              SECTION_RETRIEVE_ALL_ERROR.label,
+              SECTION_RETRIEVE_ALL_ERROR.details
+            );
+            reject(customError);
+          }
+          resolve(sections);
+        });
+    });
+  }
+
   static async getSectionCount(): Promise<any> {
     return new Promise((resolve, reject) => {
       sectionModel
         .countDocuments()
         .where({ isActive: true })
+        .exec((error: any, count: any) => {
+          if (error) {
+            logger.logMessage(error.message);
+            const customError = new CustomError(
+              STATUS_CODE_400,
+              SECTION_COUNT_ERROR.label,
+              SECTION_COUNT_ERROR.details
+            );
+            reject(customError);
+          }
+          resolve(count);
+        });
+    });
+  }
+
+  static async getSectionCountByCourseId(courseId:string): Promise<any> {
+    return new Promise((resolve, reject) => {
+      sectionModel
+        .countDocuments()
+        .where({ isActive: true,course: courseId})
         .exec((error: any, count: any) => {
           if (error) {
             logger.logMessage(error.message);
