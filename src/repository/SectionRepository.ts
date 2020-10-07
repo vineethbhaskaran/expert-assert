@@ -43,7 +43,7 @@ export default class SectionRepository {
     return new Promise((resolve, reject) => {
       sectionModel
         .find()
-        .select({ name: 1, sectionNumber: 1, numberOfSessions: 1 })
+        .select({ name: 1, sectionNumber: 1, numberOfSessions: 1,course:1 })
         .where({ isActive: true,course: courseId})
         .skip(offset)
         .limit(pageSize)
