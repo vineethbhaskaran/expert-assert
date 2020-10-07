@@ -15,7 +15,6 @@ export const getAllSections = sectionRoutes.get("/sections", async (request: Req
   
   // @ts-ignore  The string[] condition will be handled automatically
   const courseId:string = request.query.courseId || EMPTY_COURSE_ID;
-  console.log("SELECTED COURSE ID:"+courseId);
   try {
     let sectionCount = await SectionService.getSectionCount();
     // @ts-ignore  The string[] condition will be handled automatically
