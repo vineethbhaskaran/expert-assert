@@ -12,4 +12,7 @@ export const userCourseProgressSchema: Schema = new Schema({
 });
 
 userCourseProgressSchema.add(auditSchema);
-export const lessonModel = mongoose.model<UserCourseProgress>("userCourseProgressSchema", userCourseProgressSchema);
+export const userCourseProgressModel = mongoose.model<UserCourseProgress>(
+  "userCourseProgressSchema",
+  userCourseProgressSchema
+);

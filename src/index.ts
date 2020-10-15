@@ -3,7 +3,7 @@ import * as courseRoutes from "./routes/courseRoutes";
 import * as sectionRoutes from "./routes/sectionRoutes";
 import * as lessonRoutes from "./routes/lessonRoute";
 import * as loginRoutes from "./routes/loginRoutes";
-import * as userCourseProgressRoute from "./routes/UserCourseProgressRoute";
+import * as userCourseProgressRoute from "./routes/userCourseProgressRoute";
 import mongoose from "mongoose";
 import * as logger from "./logger/customLogger";
 import bodyParser from "body-parser";

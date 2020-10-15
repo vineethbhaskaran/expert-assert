@@ -1,6 +1,8 @@
 import SectionRepository from "../repository/SectionRepository";
 import LessonRepository from "../repository/LessonRepository";
 import CourseRepository from "../repository/CourseRepository";
+import UserCourseProgressRepository from "../repository/UserCourseProgressRepository";
+import UserCourseProgress from "../types/UserCourseProgress";
 
 export default class UserCourseProgressService {
   static async loadfirstPage(courseId: string): Promise<any> {
@@ -24,6 +26,17 @@ export default class UserCourseProgressService {
       courseName: courseName,
       sectionName: sectionData.name,
     };
+
+    const userProgressObject = {
+      userId: "",
+      tenantId: "",
+      courseId: lessonData.courseId,
+      currentSectionId: lessonData.sectionId,
+      currentLessonId: lessonData._id,
+    };
+    //@ts-ignore
+    const userProgress = <UserCourseProgress>userProgressObject;
+    let userCourseProgress = await UserCourseProgressRepository.saveUserCourseProgress(userProgress);
     return new Promise((resolve, reject) => {
       resolve(attendCoursePage);
     });
