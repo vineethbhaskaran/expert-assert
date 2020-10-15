@@ -68,7 +68,32 @@ export default class LessonRepository {
         });
     });
   }
-  
+
+  static async getLessonsByCourseIdSectionIdPosition(
+    courseId: string,
+    sectionId: string,
+    lessonNumber: number
+  ): Promise<any> {
+    return new Promise((resolve, reject) => {
+      lessonModel
+        .findOne()
+        .select({ name: 1, sequence: 1, contents: 1, courseId: 1, sectionId: 1 })
+        .where({ isActive: true, courseId: courseId, sectionId: sectionId, sequence: lessonNumber })
+        .exec((error: any, lessons: any) => {
+          if (error) {
+            logger.logMessage(error.message);
+            const customError = new CustomError(
+              STATUS_CODE_400,
+              LESSON_RETRIEVE_ALL_ERROR.label,
+              LESSON_RETRIEVE_ALL_ERROR.details
+            );
+            reject(customError);
+          }
+          resolve(lessons);
+        });
+    });
+  }
+
   static async getLessonCount(): Promise<any> {
     return new Promise((resolve, reject) => {
       lessonModel
@@ -84,7 +109,7 @@ export default class LessonRepository {
         });
     });
   }
-  
+
   static async getLessonCountByCourseIdSectionId(courseId: string, sectionId: string): Promise<any> {
     return new Promise((resolve, reject) => {
       lessonModel
@@ -100,8 +125,6 @@ export default class LessonRepository {
         });
     });
   }
-
-  
 
   static async getLessonById(lessonId: string): Promise<any> {
     return new Promise((resolve, reject) => {
