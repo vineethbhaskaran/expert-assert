@@ -5,8 +5,16 @@ export default class SectionService {
   static async getAllSections(pageNo: number, pageSize: number, sectionCount: number): Promise<any> {
     return SectionRepository.getAllSections(pageNo, pageSize, sectionCount);
   }
+
+  static async getSectionsByCourse(pageNo: number, pageSize: number, sectionCount: number,courseId: string): Promise<any> {
+    return SectionRepository.getSectionsByCourse(pageNo, pageSize, sectionCount,courseId);
+  }
+
   static async getSectionCount(): Promise<any> {
     return SectionRepository.getSectionCount();
+  }
+  static async getSectionCountByCourseId(courseId:string): Promise<any> {
+    return SectionRepository.getSectionCountByCourseId(courseId);
   }
 
   static async getSectionById(sectionId: string): Promise<any> {

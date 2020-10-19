@@ -12,29 +12,26 @@ const routes = Router();
  * Route to get all courses available.The response data is with the pagination
  *  details.
  */
-export const getAllCourses = routes.get(
-  "/courses",
-  TokenService.verifyToken,
-  async (request: Request, response: Response) => {
+export const getAllCourses = routes.get("/courses", async (request: Request, response: Response) => {
+  // @ts-ignore  The string[] condition will be handled automatically
+  const pageNo = parseInt(request.query.page) || DEFAULT_PAGE_NUMBER;
+
+  try {
+    const courseCount = await CourseService.getCourseCount();
     // @ts-ignore  The string[] condition will be handled automatically
-    const pageNo = parseInt(request.query.page) || DEFAULT_PAGE_NUMBER;
-    // @ts-ignore  The string[] condition will be handled automatically
-    const pageSize = parseInt(request.query.pageSize) || DEFAULT_PAGE_SIZE;
-    try {
-      const courseCount = await CourseService.getCourseCount();
-      const data = await CourseService.getAllCourses(pageNo, pageSize, courseCount);
-      const paginationDetails = ResponseUtils.retreivePaginationDetails(pageNo, pageSize, courseCount);
-      const successResponse = {
-        meta: paginationDetails,
-        data: data,
-      };
-      return response.json(successResponse);
-    } catch (errorResponse) {
-      logger.logMessage(errorResponse);
-      return response.json(errorResponse);
-    }
+    const pageSize = parseInt(request.query.pageSize) || courseCount;
+    const data = await CourseService.getAllCourses(pageNo, pageSize, courseCount);
+    const paginationDetails = ResponseUtils.retreivePaginationDetails(pageNo, pageSize, courseCount);
+    const successResponse = {
+      meta: paginationDetails,
+      data: data,
+    };
+    return response.json(successResponse);
+  } catch (errorResponse) {
+    logger.logMessage(errorResponse);
+    return response.json(errorResponse);
   }
-);
+});
 
 export const getCourseById = routes.get("/courses/:courseId", async (request: Request, response: Response) => {
   const courseId = request.params.courseId;
@@ -50,20 +47,16 @@ export const getCourseById = routes.get("/courses/:courseId", async (request: Re
 /**
  * This POST method creates the course
  */
-export const createCourse = routes.post(
-  "/courses",
-  TokenService.verifyToken,
-  async (request: Request, response: Response) => {
-    try {
-      const course = <Course>request.body;
-      const successResponse = await CourseService.saveCourse(course);
-      return response.json(successResponse);
-    } catch (errorResponse) {
-      logger.logMessage(errorResponse);
-      return response.json(errorResponse);
-    }
+export const createCourse = routes.post("/courses", async (request: Request, response: Response) => {
+  try {
+    const course = <Course>request.body;
+    const successResponse = await CourseService.saveCourse(course);
+    return response.json(successResponse);
+  } catch (errorResponse) {
+    logger.logMessage(errorResponse);
+    return response.json(errorResponse);
   }
-);
+});
 
 export const updateCourse = routes.put("/courses/:courseId", async (request: Request, response: Response) => {
   const course = <Course>request.body;

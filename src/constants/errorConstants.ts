@@ -75,3 +75,13 @@ export const LESSON_DELETION_ERROR = {
   label: "LESSON_DELETION_ERROR",
   details: "Error while deleting the lesson",
 };
+
+export const COURSE_PROGRESS_UPDATION_ERROR = {
+  label: "COURSE_PROGRESS_UPDATION_ERROR",
+  details: "Error while updating the course progress",
+};
+
+export const COURSE_PROGRESS_RETRIEVAL_ERROR = {
+  label: "COURSE_PROGRESS_RETRIEVAL_ERROR",
+  details: "Error while retrieving the course progress",
+};

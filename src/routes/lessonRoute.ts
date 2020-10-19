@@ -2,7 +2,7 @@ import { Router, Request, Response, request } from "express";
 import * as logger from "../logger/customLogger";
 import Lesson from "../types/Lesson";
 import LessonService from "../service/LessonService";
-import { DEFAULT_PAGE_NUMBER, DEFAULT_PAGE_SIZE } from "../constants/constants";
+import { DEFAULT_PAGE_NUMBER, DEFAULT_PAGE_SIZE, EMPTY_COURSE_ID, EMPTY_SECTION_ID } from "../constants/constants";
 import { ResponseUtils } from "../util/ResponseUtil";
 import multer from "multer";
 import AwsS3Util from "../util/AwsS3Util";
@@ -14,10 +14,24 @@ export const getAllLessons = lessonRoutes.get("/lessons", async (request: Reques
   // @ts-ignore  The string[] condition will be handled automatically
   const pageNo = parseInt(request.query.page) || DEFAULT_PAGE_NUMBER;
   // @ts-ignore  The string[] condition will be handled automatically
-  const pageSize = parseInt(request.query.pageSize) || DEFAULT_PAGE_SIZE;
+  const courseId: string = request.query.courseId || EMPTY_COURSE_ID;
+  // @ts-ignore  The string[] condition will be handled automatically
+  const sectionId: string = request.query.sectionId || EMPTY_SECTION_ID;
+
   try {
-    const lessonCount = await LessonService.getLessonCount();
-    const data = await LessonService.getAllLessons(pageNo, pageSize, lessonCount);
+    let data = {};
+    let lessonCount = await LessonService.getLessonCount();
+    // @ts-ignore  The string[] condition will be handled automatically
+    let pageSize = parseInt(request.query.pageSize) || lessonCount;
+
+    if (courseId != null && sectionId != null) {
+      lessonCount = await LessonService.getLessonCountByCourseIdSectionId(courseId, sectionId);
+      // @ts-ignore  The string[] condition will be handled automatically
+      pageSize = parseInt(request.query.pageSize) || lessonCount;
+      data = await LessonService.getLessonsByCourseIdSectionId(pageNo, pageSize, lessonCount, courseId, sectionId);
+    } else {
+      data = await LessonService.getAllLessons(pageNo, pageSize, lessonCount);
+    }
     const paginationDetails = ResponseUtils.retreivePaginationDetails(pageNo, pageSize, lessonCount);
     const successResponse = {
       meta: paginationDetails,
