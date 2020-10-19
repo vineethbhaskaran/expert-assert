@@ -5,3 +5,4 @@ export const EMPTY_SECTION_ID = null;
 
 //http Status codes
 export const STATUS_CODE_400 = 400;
+export const STATUS_CODE_404 = 404;
