@@ -9,6 +9,7 @@
     "start": "NODE_ENV=staging node dist/index.js",
     "rimraf": "./node_modules/rimraf/bin.js",
     "clean": "rimraf ./dist/*",
+    "generate-schema":"ts-node ./schema-generator.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "vineeth bhaskaran",
@@ -24,7 +25,8 @@
     "jwks-rsa": "^1.9.0",
     "mongoose": "^5.10.1",
     "multer": "^1.4.2",
-    "pino": "^6.5.1"
+    "pino": "^6.5.1",
+    "ts-json-schema-generator": "^0.77.0"
   },
   "devDependencies": {
     "@types/cors": "^2.8.7",

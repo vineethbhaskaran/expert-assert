@@ -1,0 +1,82 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$ref": "#/definitions/Course",
+  "definitions": {
+    "Course": {
+      "type": "object",
+      "properties": {
+        "createdBy": {
+          "type": "object",
+          "properties": {
+            "length": {
+              "type": "number"
+            }
+          },
+          "required": [
+            "length"
+          ],
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "createdDate": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updatedBy": {
+          "type": "object",
+          "properties": {
+            "length": {
+              "type": "number"
+            }
+          },
+          "required": [
+            "length"
+          ],
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "updatedDate": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "name": {
+          "type": "string"
+        },
+        "code": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "numberOfSections": {
+          "type": "number"
+        },
+        "tenantId": {
+          "type": "string"
+        },
+        "isPublished": {
+          "type": "boolean"
+        },
+        "isActive": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "code",
+        "createdBy",
+        "createdDate",
+        "description",
+        "isActive",
+        "isPublished",
+        "name",
+        "numberOfSections",
+        "tenantId",
+        "updatedBy",
+        "updatedDate"
+      ],
+      "additionalProperties": false
+    }
+  }
+}
