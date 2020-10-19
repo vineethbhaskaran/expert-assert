@@ -1,5 +1,7 @@
+import { CourseValidator } from "../validator/CourseValidator";
 import CourseRepository from "../repository/CourseRepository";
 import Course from "../types/Course";
+import * as logger from "../logger/customLogger";
 
 export default class CourseService {
   static async getAllCourses(pageNo: number, pageSize: number, courseCount: number): Promise<any> {
@@ -15,6 +17,7 @@ export default class CourseService {
     //Set number of sections as 0 while creating the course
     course.numberOfSections = 0;
 
+    const validateResult = await CourseValidator.validateCourse(course);
     return CourseRepository.saveCourse(course);
   }
 

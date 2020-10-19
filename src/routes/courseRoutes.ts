@@ -2,8 +2,9 @@ import { Router, Request, Response } from "express";
 import * as logger from "../logger/customLogger";
 import CourseService from "..//service/courseService";
 import { ResponseUtils } from "../util/ResponseUtil";
-import { DEFAULT_PAGE_NUMBER, DEFAULT_PAGE_SIZE } from "../constants/constants";
+import { DEFAULT_PAGE_NUMBER, DEFAULT_PAGE_SIZE, STATUS_CODE_400 } from "../constants/constants";
 import Course from "../types/Course";
+import { FAILED, VALIDATION_ERROR_CODE } from "../constants/errorConstants";
 
 const routes = Router();
 
@@ -51,9 +52,28 @@ export const createCourse = routes.post("/courses", async (request: Request, res
     const course = <Course>request.body;
     const successResponse = await CourseService.saveCourse(course);
     return response.json(successResponse);
-  } catch (errorResponse) {
-    logger.logMessage(errorResponse);
-    return response.json(errorResponse);
+  } catch (err) {
+    //logger.logMessage(errorResponse);
+    //return response.json(errorResponse);
+
+    logger.logMessage(err);
+    if (err.name === VALIDATION_ERROR_CODE) {
+      return response
+        .json({
+          status: FAILED,
+          error: err.name,
+          details: err.data,
+        })
+        .status(STATUS_CODE_400);
+    } else {
+      return response
+        .json({
+          status: FAILED,
+          error: "Save Error",
+          details: err,
+        })
+        .status(STATUS_CODE_400);
+    }
   }
 });
 

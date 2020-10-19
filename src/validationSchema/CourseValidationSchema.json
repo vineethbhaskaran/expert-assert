@@ -64,17 +64,11 @@
         }
       },
       "required": [
-        "code",
-        "createdBy",
-        "createdDate",
-        "description",
-        "isActive",
-        "isPublished",
         "name",
+        "code",
+        "description",
         "numberOfSections",
-        "tenantId",
-        "updatedBy",
-        "updatedDate"
+        "tenantId"
       ],
       "additionalProperties": false
     }

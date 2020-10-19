@@ -6,6 +6,6 @@ export default interface Course extends AuditFields {
   description: string;
   numberOfSections: number;
   tenantId: string;
-  isPublished: boolean;
-  isActive: boolean;
+  isPublished?: boolean;
+  isActive?: boolean;
 }

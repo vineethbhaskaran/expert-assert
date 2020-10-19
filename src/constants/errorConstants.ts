@@ -1,3 +1,5 @@
+export const VALIDATION_ERROR_CODE = "ValidationError";
+export const FAILED = "Failed";
 //Error code for course
 export const COURSE_CREATION_ERROR = {
   label: "COURSE_CREATION_ERROR",
