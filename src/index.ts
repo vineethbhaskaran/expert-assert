@@ -43,7 +43,7 @@ const init = async () => {
     //JWT token routes
     //app.use(loginRoutes.login);
     //app.use(loginRoutes.token);
-    app.use(jwtCheck);
+    //app.use(jwtCheck);
 
     //Registering course
     app.use(courseRoutes.getAllCourses);

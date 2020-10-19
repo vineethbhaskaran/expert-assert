@@ -1,11 +1,10 @@
 import AuditFields from "./AuditFields";
-import Course from "./Course";
-import { Schema } from "mongoose";
-
 export default interface Section extends AuditFields {
-  name: String;
-  sectionNumber: number;
-  course: String;
-  numberOfSessions: number;
+  name: string;
+  sectionSequence: number;
+  numberOfLessons: number;
+  tenantId: string;
+  courseId: string;
+  isFinalSection: boolean; // This will be true for the last section
   isActive: boolean;
 }

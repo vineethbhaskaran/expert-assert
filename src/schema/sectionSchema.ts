@@ -5,8 +5,10 @@ import Section from "../types/Section";
 export const sectionScehma: Schema = new Schema({
   name: { type: String, required: true },
   sectionNumber: { type: Number, required: true },
-  numberOfSessions: { type: Number, requied: true },
-  course: { type: Schema.Types.ObjectId, ref: "courseSchema" },
+  numberOfLessons: { type: Number, requied: true },
+  isFinalSection: { type: Boolean, default: false },
+  tenantId: { type: Schema.Types.ObjectId, ref: "tenantSchema" },
+  courseId: { type: Schema.Types.ObjectId, ref: "courseSchema" },
   isActive: { type: Boolean, required: true, default: true },
 });
 //adding audit schema to course schema

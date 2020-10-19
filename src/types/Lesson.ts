@@ -1,11 +1,13 @@
 import AuditFields from "./AuditFields";
 
 export default interface Lesson extends AuditFields {
-  title: String;
-  sequence: number;
-  contents: String;
-  fileLocation: String;
-  courseId: String;
-  sectionId: String;
+  name: string;
+  lessonSequence: number;
+  contents: string;
+  fileLocation: string;
+  tenantId: string;
+  courseId: string;
+  sectionId: string;
+  isFinalLesson: boolean;
   isActive: boolean;
 }

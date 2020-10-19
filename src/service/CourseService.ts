@@ -12,6 +12,9 @@ export default class CourseService {
     return CourseRepository.getCourseById(courseId);
   }
   static async saveCourse(course: Course): Promise<any> {
+    //Set number of sections as 0 while creating the course
+    course.numberOfSections = 0;
+
     return CourseRepository.saveCourse(course);
   }
 

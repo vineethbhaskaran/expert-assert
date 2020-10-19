@@ -18,11 +18,11 @@ export default class CourseRepository {
     return new Promise((resolve, reject) => {
       courseModel
         .find()
-        .select({ code: 1, name: 1, description: 1 })
+        .select({ code: 1, name: 1, description: 1, tenantId: 1, isPublished: 1 })
         .where({ isActive: true })
         .skip(offset)
         .limit(pageSize)
-        .sort({ code: "asc" })
+        .sort({ name: "asc" })
         .exec((error: any, courses: any) => {
           if (error) {
             logger.logMessage(error.message);
@@ -32,6 +32,7 @@ export default class CourseRepository {
               COURSE_RETRIEVE_ALL_ERROR.details
             );
             reject(customError);
+            return;
           }
           resolve(courses);
         });
@@ -57,8 +58,8 @@ export default class CourseRepository {
   static async getCourseById(courseId: string): Promise<any> {
     return new Promise((resolve, reject) => {
       courseModel
-        .find()
-        .select({ code: 1, name: 1, description: 1 })
+        .findOne()
+        .select({ code: 1, name: 1, description: 1, tenantId: 1, isPublished: 1 })
         .where({ _id: courseId, isActive: true })
         .exec((error: any, courses: any) => {
           if (error) {
@@ -69,6 +70,7 @@ export default class CourseRepository {
               COURSE_RETRIEVE_BY_ID_ERROR.details
             );
             reject(customError);
+            return;
           }
           resolve(courses);
         });

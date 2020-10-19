@@ -4,7 +4,6 @@ import CourseService from "..//service/courseService";
 import { ResponseUtils } from "../util/ResponseUtil";
 import { DEFAULT_PAGE_NUMBER, DEFAULT_PAGE_SIZE } from "../constants/constants";
 import Course from "../types/Course";
-import TokenService from "../security/TokenService";
 
 const routes = Router();
 
