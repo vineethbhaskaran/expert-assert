@@ -5,6 +5,7 @@ import SectionService from "../service/SectionService";
 import { ResponseUtils } from "../util/ResponseUtil";
 import { DEFAULT_PAGE_NUMBER, DEFAULT_PAGE_SIZE, EMPTY_COURSE_ID, STATUS_CODE_400 } from "../constants/constants";
 import { FAILED, VALIDATION_ERROR_CODE } from "../constants/errorConstants";
+import CourseService from "../service/courseService";
 
 const sectionRoutes = Router();
 /** If courseId passed as parameter. This endpoint will return the sections belong to that
@@ -60,6 +61,14 @@ export const createSection = sectionRoutes.post("/sections", async (request: Req
   const section = <Section>request.body;
   try {
     const successResponse = await SectionService.saveSection(section);
+    //TODO :move to different class
+    //Incrementing number of sections in course
+    const course = await CourseService.getCourseById(section.courseId);
+    let updatedNumberOfSections = course.numberOfSections + 1;
+    course.numberOfSections = updatedNumberOfSections;
+    let isUpdated = await CourseService.updateCourse(course);
+
+    logger.logMessage("Number of Sections updated");
     return response.json(successResponse);
   } catch (errorResponse) {
     logger.logMessage(errorResponse);
@@ -99,7 +108,18 @@ export const deleteSection = sectionRoutes.delete(
   async (request: Request, response: Response) => {
     const sectionId = request.params.sectionId;
     try {
+      //retrive section before deletion.To get courseId
+      const section = await SectionService.getSectionById(sectionId);
+
       const sectionObject = await SectionService.softDeleteSection(sectionId);
+      //TODO :move to different class
+      //Incrementing number of sections in course
+
+      const course = await CourseService.getCourseById(section.courseId);
+      let updatedNumberOfSections = course.numberOfSections - 1;
+      course.numberOfSections = updatedNumberOfSections;
+      let isUpdated = await CourseService.updateCourse(course);
+
       return response.json(sectionObject);
     } catch (errorResponse) {
       logger.logMessage(errorResponse);

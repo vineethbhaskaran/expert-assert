@@ -25,7 +25,7 @@ export default class CourseRepository {
     return new Promise((resolve, reject) => {
       courseModel
         .find()
-        .select({ code: 1, name: 1, description: 1, tenantId: 1, isPublished: 1 })
+        .select({ code: 1, name: 1, description: 1, numberOfSections: 1, tenantId: 1, isPublished: 1 })
         .where({ isActive: true })
         .skip(offset)
         .limit(pageSize)
@@ -66,7 +66,7 @@ export default class CourseRepository {
     return new Promise((resolve, reject) => {
       courseModel
         .findOne()
-        .select({ code: 1, name: 1, description: 1, tenantId: 1, isPublished: 1 })
+        .select({ code: 1, name: 1, description: 1, numberOfSections: 1, tenantId: 1, isPublished: 1 })
         .where({ _id: courseId, isActive: true })
         .exec(async (error: any, courses: any) => {
           if (error) {
