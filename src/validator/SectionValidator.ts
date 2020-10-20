@@ -1,21 +1,18 @@
-import Course from "../types/Course";
+import Section from "../types/Section";
 import { Validator } from "jsonschema";
-const courseValidationSchema = require("../validationSchema/CourseValidationSchema.json");
 import { SchemaValidationError } from "./SchemaValidationError";
 import ExpertAssertError from "../types/ExpertAssertError";
+const sectionValidationSchema = require("../validationSchema/SectionValidationSchema.json");
 
-export class CourseValidator {
-  static async validateCourse(course: Course): Promise<any> {
+export class SectionValidator {
+  static async validateSection(section: Section): Promise<any> {
     return new Promise((resolve, reject) => {
       const jsonSchemaValidator = new Validator();
-      const result = jsonSchemaValidator.validate(course, courseValidationSchema);
+      const result = jsonSchemaValidator.validate(section, sectionValidationSchema);
 
       const validationErrors: SchemaValidationError[] = [];
 
       if (result.errors.length !== 0) {
-        //creating custom error object
-        //reject(new ExpertAssertError("ValidationError", result.errors));
-        //return;
         result.errors.forEach((error) => {
           validationErrors.push({
             validationErrorType: error.name,

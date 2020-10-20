@@ -4,10 +4,10 @@ import Section from "../types/Section";
 
 export const sectionScehma: Schema = new Schema({
   name: { type: String, required: true },
-  sectionNumber: { type: Number, required: true },
+  sectionSequence: { type: Number, required: true },
   numberOfLessons: { type: Number, requied: true },
   isFinalSection: { type: Boolean, default: false },
-  tenantId: { type: Schema.Types.ObjectId, ref: "tenantSchema" },
+  tenantId: { type: String, required: true },
   courseId: { type: Schema.Types.ObjectId, ref: "courseSchema" },
   isActive: { type: Boolean, required: true, default: true },
 });

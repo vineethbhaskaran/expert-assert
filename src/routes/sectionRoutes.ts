@@ -3,32 +3,33 @@ import Section from "../types/Section";
 import * as logger from "../logger/customLogger";
 import SectionService from "../service/SectionService";
 import { ResponseUtils } from "../util/ResponseUtil";
-import { DEFAULT_PAGE_NUMBER, DEFAULT_PAGE_SIZE,EMPTY_COURSE_ID } from "../constants/constants";
+import { DEFAULT_PAGE_NUMBER, DEFAULT_PAGE_SIZE, EMPTY_COURSE_ID, STATUS_CODE_400 } from "../constants/constants";
+import { FAILED, VALIDATION_ERROR_CODE } from "../constants/errorConstants";
 
 const sectionRoutes = Router();
 /** If courseId passed as parameter. This endpoint will return the sections belong to that
  * course
-*/
+ */
 export const getAllSections = sectionRoutes.get("/sections", async (request: Request, response: Response) => {
   // @ts-ignore  The string[] condition will be handled automatically
   const pageNo = parseInt(request.query.page) || DEFAULT_PAGE_NUMBER;
-  
+
   // @ts-ignore  The string[] condition will be handled automatically
-  const courseId:string = request.query.courseId || EMPTY_COURSE_ID;
+  const courseId: string = request.query.courseId || EMPTY_COURSE_ID;
   try {
     let sectionCount = await SectionService.getSectionCount();
     // @ts-ignore  The string[] condition will be handled automatically
-    let pageSize:number = parseInt(request.query.pageSize) || sectionCount;
-    let data={};
-    if(courseId!=null){
-      sectionCount=await SectionService.getSectionCountByCourseId(courseId);
+    let pageSize: number = parseInt(request.query.pageSize) || sectionCount;
+    let data = {};
+    if (courseId != null) {
+      sectionCount = await SectionService.getSectionCountByCourseId(courseId);
       // @ts-ignore  The string[] condition will be handled automatically
       pageSize = parseInt(request.query.pageSize) || sectionCount;
-      data = await SectionService.getSectionsByCourse(pageNo, pageSize, sectionCount,courseId);
-    }else{
-       data = await SectionService.getAllSections(pageNo, pageSize, sectionCount);
+      data = await SectionService.getSectionsByCourse(pageNo, pageSize, sectionCount, courseId);
+    } else {
+      data = await SectionService.getAllSections(pageNo, pageSize, sectionCount);
     }
-   
+
     const paginationDetails = ResponseUtils.retreivePaginationDetails(pageNo, pageSize, sectionCount);
     const successResponse = {
       meta: paginationDetails,
@@ -62,7 +63,23 @@ export const createSection = sectionRoutes.post("/sections", async (request: Req
     return response.json(successResponse);
   } catch (errorResponse) {
     logger.logMessage(errorResponse);
-    return response.json(errorResponse);
+    if (errorResponse.name === VALIDATION_ERROR_CODE) {
+      return response
+        .json({
+          status: FAILED,
+          error: errorResponse.name,
+          details: errorResponse.data,
+        })
+        .status(STATUS_CODE_400);
+    } else {
+      return response
+        .json({
+          status: FAILED,
+          error: "Save Section Error",
+          details: errorResponse,
+        })
+        .status(STATUS_CODE_400);
+    }
   }
 });
 

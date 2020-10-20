@@ -1,19 +1,25 @@
 import Section from "../types/Section";
 import SectionRepository from "../repository/SectionRepository";
+import { SectionValidator } from "../validator/SectionValidator";
 
 export default class SectionService {
   static async getAllSections(pageNo: number, pageSize: number, sectionCount: number): Promise<any> {
     return SectionRepository.getAllSections(pageNo, pageSize, sectionCount);
   }
 
-  static async getSectionsByCourse(pageNo: number, pageSize: number, sectionCount: number,courseId: string): Promise<any> {
-    return SectionRepository.getSectionsByCourse(pageNo, pageSize, sectionCount,courseId);
+  static async getSectionsByCourse(
+    pageNo: number,
+    pageSize: number,
+    sectionCount: number,
+    courseId: string
+  ): Promise<any> {
+    return SectionRepository.getSectionsByCourse(pageNo, pageSize, sectionCount, courseId);
   }
 
   static async getSectionCount(): Promise<any> {
     return SectionRepository.getSectionCount();
   }
-  static async getSectionCountByCourseId(courseId:string): Promise<any> {
+  static async getSectionCountByCourseId(courseId: string): Promise<any> {
     return SectionRepository.getSectionCountByCourseId(courseId);
   }
 
@@ -22,6 +28,9 @@ export default class SectionService {
   }
 
   static async saveSection(section: Section): Promise<any> {
+    //Set number of lessons as 0 while creating the section
+    section.numberOfLessons = 0;
+    const validateResult = await SectionValidator.validateSection(section);
     return SectionRepository.saveSection(section);
   }
 

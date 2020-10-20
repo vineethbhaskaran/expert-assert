@@ -69,7 +69,7 @@ export const createCourse = routes.post("/courses", async (request: Request, res
       return response
         .json({
           status: FAILED,
-          error: "Save Error",
+          error: "Save Course Error",
           details: err,
         })
         .status(STATUS_CODE_400);

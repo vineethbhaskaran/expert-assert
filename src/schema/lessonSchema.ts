@@ -7,7 +7,7 @@ export const lessonSchema: Schema = new Schema({
   lessonSequence: { type: Number, required: true },
   contents: { type: String },
   fileLocation: { type: String },
-  tenantId: { type: Schema.Types.ObjectId, ref: "tenantSchema" },
+  tenantId: { type: String, required: true },
   courseId: { type: Schema.Types.ObjectId, ref: "courseSchema" },
   sectionId: { type: Schema.Types.ObjectId, ref: "sectionSchema" },
   isFinalLesson: { type: Boolean, default: false },
