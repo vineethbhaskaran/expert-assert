@@ -26,6 +26,11 @@ export const COURSE_DELETION_ERROR = {
   details: "Error while deleting the course",
 };
 
+export const COURSE_CODE_DUPLICATE = {
+  label: "COURSE_CODE_DUPLICATE",
+  details: "This Course Code already exists",
+};
+
 //Error codes for Section
 export const SECTION_CREATION_ERROR = {
   label: "SECTION_CREATION_ERROR",

@@ -11,6 +11,7 @@ import {
   COURSE_DELETION_ERROR,
 } from "../constants/errorConstants";
 import { STATUS_CODE_400 } from "../constants/constants";
+import { CourseDBErrorHandler } from "../errorHandler/CourseDBErrorHandler";
 
 export default class CourseRepository {
   static async getAllCourses(pageNo: number, pageSize: number, courseCount: number): Promise<any> {
@@ -86,15 +87,12 @@ export default class CourseRepository {
   static async saveCourse(course: Course): Promise<any> {
     const courseData = new courseModel(course);
     return new Promise((resolve, reject) => {
-      courseData.save((error: any, dbResponse: any) => {
+      courseData.save(async (error: any, dbResponse: any) => {
         if (error) {
           logger.logMessage(error.message);
-          const customError = new CustomError(
-            STATUS_CODE_400,
-            COURSE_CREATION_ERROR.label,
-            COURSE_CREATION_ERROR.details
-          );
-          reject(customError);
+          const courseCreationError = await CourseDBErrorHandler.handleErrors(error.code);
+          reject(courseCreationError);
+          return;
         }
         logger.logMessage("Respone from DB=" + JSON.stringify(dbResponse, null, 2));
         resolve(true);
