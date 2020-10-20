@@ -124,7 +124,7 @@ export default class LessonRepository {
   static async getLessonById(lessonId: string): Promise<any> {
     return new Promise((resolve, reject) => {
       lessonModel
-        .find()
+        .findOne()
         .select({ name: 1, sequence: 1, contents: 1, courseId: 1, sectionId: 1 })
         .where({ _id: lessonId, isActive: true })
         .exec(async (error: any, lessons: any) => {

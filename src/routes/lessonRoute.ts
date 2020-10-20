@@ -14,6 +14,7 @@ import multer from "multer";
 import AwsS3Util from "../util/AwsS3Util";
 import path from "path";
 import { FAILED, VALIDATION_ERROR_CODE } from "../constants/errorConstants";
+import SectionService from "../service/SectionService";
 
 const lessonRoutes = Router();
 
@@ -66,6 +67,14 @@ export const createLesson = lessonRoutes.post("/lessons", async (request, respon
   const lesson: Lesson = <Lesson>request.body;
   try {
     const successResponse = await LessonService.saveLesson(lesson);
+
+    //TODO :move to different class
+    //Incrementing number of sections in course
+    const section = await SectionService.getSectionById(lesson.sectionId);
+    let updatedNumberOfLessons = section.numberOfLessons + 1;
+    section.numberOfLessons = updatedNumberOfLessons;
+    let isUpdated = await SectionService.updateSection(section);
+
     response.json(successResponse);
   } catch (errorResponse) {
     logger.logMessage(errorResponse);
@@ -104,7 +113,16 @@ export const updateLesson = lessonRoutes.put("/lessons/:lessonId", async (reques
 export const deleteLesson = lessonRoutes.delete("/lessons/:lessonId", async (request: Request, response: Response) => {
   const lessonId = request.params.lessonId;
   try {
+    const lesson = await LessonService.getLessonById(lessonId);
+
     const lessonObject = await LessonService.softDeleteLesson(lessonId);
+    //TODO :move to different class
+    //Incrementing number of sections in course
+    const section = await SectionService.getSectionById(lesson.sectionId);
+    let updatedNumberOfLessons = section.numberOfLessons - 1;
+    section.numberOfLessons = updatedNumberOfLessons;
+    let isUpdated = await SectionService.updateSection(section);
+
     return response.json(lessonObject);
   } catch (errorResponse) {
     logger.logMessage(errorResponse);
