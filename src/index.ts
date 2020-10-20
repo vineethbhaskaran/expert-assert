@@ -51,6 +51,8 @@ const init = async () => {
     app.use(courseRoutes.createCourse);
     app.use(courseRoutes.updateCourse);
     app.use(courseRoutes.deleteCourse);
+    app.use(courseRoutes.publishCourse);
+    app.use(courseRoutes.unpublishCourse);
 
     //Registring section
     app.use(sectionRoutes.getAllSections);

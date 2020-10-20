@@ -98,3 +98,44 @@ export const deleteCourse = routes.delete("/courses/:courseId", async (request: 
     return response.json(errorResponse);
   }
 });
+
+/**
+ * Modify the isPublish flag to true and update
+ */
+export const publishCourse = routes.get("/courses/publish/:courseId", async (request: Request, response: Response) => {
+  const courseId = request.params.courseId;
+  //create an empty object and cast to Course(new will not work for interface type)
+  let course = <Course>{
+    id: courseId,
+    isPublished: true,
+  };
+  try {
+    const successResponse = await CourseService.updateCourse(course);
+    return response.json(successResponse);
+  } catch (errorResponse) {
+    logger.logMessage(errorResponse);
+    return response.json(errorResponse);
+  }
+});
+
+/**
+ * Modify the isPublish flag to false and update
+ */
+export const unpublishCourse = routes.get(
+  "/courses/unpublish/:courseId",
+  async (request: Request, response: Response) => {
+    const courseId = request.params.courseId;
+    //create an empty object and cast to Course(new will not work for interface type)
+    let course = <Course>{
+      id: courseId,
+      isPublished: false,
+    };
+    try {
+      const successResponse = await CourseService.updateCourse(course);
+      return response.json(successResponse);
+    } catch (errorResponse) {
+      logger.logMessage(errorResponse);
+      return response.json(errorResponse);
+    }
+  }
+);
