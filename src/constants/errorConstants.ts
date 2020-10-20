@@ -45,6 +45,10 @@ export const SECTION_CREATION_ERROR = {
   label: "SECTION_CREATION_ERROR",
   details: "Error while Creating new section",
 };
+export const SECTION_RETRIEVE_ERROR = {
+  label: "SECTION_RETRIEVE_ERROR",
+  details: "Error while Retriving section",
+};
 export const SECTION_RETRIEVE_ALL_ERROR = {
   label: "SECTION_RETRIEVE_ALL_ERROR",
   details: "Error while Retriving All sections",
@@ -64,6 +68,11 @@ export const SECTION_UPDATION_ERROR = {
 export const SECTION_DELETION_ERROR = {
   label: "SECTION_DELETION_ERROR",
   details: "Error while deleting the section",
+};
+
+export const SECTION_DEFAULT_ERROR = {
+  label: "SECTION_DEFAULT_ERROR",
+  details: "Generic error for Section",
 };
 
 //Error codes for Lesson
