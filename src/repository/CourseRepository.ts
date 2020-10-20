@@ -10,7 +10,13 @@ import {
   COURSE_UPDATION_ERROR,
   COURSE_DELETION_ERROR,
 } from "../constants/errorConstants";
-import { STATUS_CODE_400 } from "../constants/constants";
+import {
+  COURSE_OPERATION_CREATE,
+  COURSE_OPERATION_DELETE,
+  COURSE_OPERATION_GET,
+  COURSE_OPERATION_UPDATE,
+  STATUS_CODE_400,
+} from "../constants/constants";
 import { CourseDBErrorHandler } from "../errorHandler/CourseDBErrorHandler";
 
 export default class CourseRepository {
@@ -62,15 +68,11 @@ export default class CourseRepository {
         .findOne()
         .select({ code: 1, name: 1, description: 1, tenantId: 1, isPublished: 1 })
         .where({ _id: courseId, isActive: true })
-        .exec((error: any, courses: any) => {
+        .exec(async (error: any, courses: any) => {
           if (error) {
             logger.logMessage(error.message);
-            const customError = new CustomError(
-              STATUS_CODE_400,
-              COURSE_RETRIEVE_BY_ID_ERROR.label,
-              COURSE_RETRIEVE_BY_ID_ERROR.details
-            );
-            reject(customError);
+            const courseRetrievalError = await CourseDBErrorHandler.handleErrors(error.code, COURSE_OPERATION_GET);
+            reject(courseRetrievalError);
             return;
           }
           resolve(courses);
@@ -90,7 +92,7 @@ export default class CourseRepository {
       courseData.save(async (error: any, dbResponse: any) => {
         if (error) {
           logger.logMessage(error.message);
-          const courseCreationError = await CourseDBErrorHandler.handleErrors(error.code);
+          const courseCreationError = await CourseDBErrorHandler.handleErrors(error.code, COURSE_OPERATION_CREATE);
           reject(courseCreationError);
           return;
         }
@@ -103,15 +105,11 @@ export default class CourseRepository {
   static async updateCourse(course: Course): Promise<any> {
     return new Promise((resolve, reject) => {
       const filter = { _id: course.id };
-      courseModel.update(filter, course, (error: any, dbResponse: any) => {
+      courseModel.update(filter, course, async (error: any, dbResponse: any) => {
         if (error) {
           logger.logMessage(error.message);
-          const customError = new CustomError(
-            STATUS_CODE_400,
-            COURSE_UPDATION_ERROR.label,
-            COURSE_UPDATION_ERROR.details
-          );
-          reject(customError);
+          const courseUpdationError = await CourseDBErrorHandler.handleErrors(error.code, COURSE_OPERATION_UPDATE);
+          reject(courseUpdationError);
         }
         logger.logMessage("Respone from DB=" + JSON.stringify(dbResponse, null, 2));
         resolve(dbResponse);
@@ -122,15 +120,11 @@ export default class CourseRepository {
   static async softDeleteCourse(courseId: string): Promise<any> {
     return new Promise((resolve, reject) => {
       const filter = { _id: courseId };
-      courseModel.findOneAndUpdate(filter, { isActive: false }, (error: any, dbResponse: any) => {
+      courseModel.findOneAndUpdate(filter, { isActive: false }, async (error: any, dbResponse: any) => {
         if (error) {
           logger.logMessage(error.message);
-          const customError = new CustomError(
-            STATUS_CODE_400,
-            COURSE_DELETION_ERROR.label,
-            COURSE_DELETION_ERROR.details
-          );
-          reject(customError);
+          const courseDeleteError = await CourseDBErrorHandler.handleErrors(error.code, COURSE_OPERATION_DELETE);
+          reject(courseDeleteError);
         }
         logger.logMessage("Respone from DB=" + JSON.stringify(dbResponse, null, 2));
         resolve(true);

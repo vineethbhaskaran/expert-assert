@@ -5,6 +5,10 @@ export const COURSE_CREATION_ERROR = {
   label: "COURSE_CREATION_ERROR",
   details: "Error while Creating new Course",
 };
+export const COURSE_RETRIEVE_ERROR = {
+  label: "COURSE_RETRIEVE_ERROR",
+  details: "Error while Retriving Course",
+};
 export const COURSE_RETRIEVE_ALL_ERROR = {
   label: "COURSE_RETRIEVE_ALL_ERROR",
   details: "Error while Retriving All Courses",
@@ -29,6 +33,11 @@ export const COURSE_DELETION_ERROR = {
 export const COURSE_CODE_DUPLICATE = {
   label: "COURSE_CODE_DUPLICATE",
   details: "This Course Code already exists",
+};
+
+export const COURSE_DEFAULT_ERROR = {
+  label: "COURSE_DEFAULT_ERROR",
+  details: "This is generic error for course oerations",
 };
 
 //Error codes for Section

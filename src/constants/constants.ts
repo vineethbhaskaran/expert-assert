@@ -3,6 +3,10 @@ export const DEFAULT_PAGE_NUMBER = 1;
 export const EMPTY_COURSE_ID = null;
 export const EMPTY_SECTION_ID = null;
 
+export const COURSE_OPERATION_CREATE = "COURSE_OPERATION_CREATE";
+export const COURSE_OPERATION_GET = "COURSE_OPERATION_GET";
+export const COURSE_OPERATION_UPDATE = "COURSE_OPERATION_UPDATE";
+export const COURSE_OPERATION_DELETE = "COURSE_OPERATION_DELETE";
 //http Status codes
 export const STATUS_CODE_400 = 400;
 export const STATUS_CODE_404 = 404;
