@@ -80,6 +80,10 @@ export const LESSON_CREATION_ERROR = {
   label: "LESSON_CREATION_ERROR",
   details: "Error while Creating new lesson",
 };
+export const LESSON_RETRIEVE_ERROR = {
+  label: "LESSON_RETRIEVE_ERROR",
+  details: "Error while Retriving lesson",
+};
 export const LESSON_RETRIEVE_ALL_ERROR = {
   label: "LESSON_RETRIEVE_ALL_ERROR",
   details: "Error while Retriving All lessons",
@@ -99,6 +103,11 @@ export const LESSON_UPDATION_ERROR = {
 export const LESSON_DELETION_ERROR = {
   label: "LESSON_DELETION_ERROR",
   details: "Error while deleting the lesson",
+};
+
+export const LESSON_DEFAULT_ERROR = {
+  label: "LESSON_DEFAULT_ERROR",
+  details: "Generic Error in lesson",
 };
 
 export const COURSE_PROGRESS_UPDATION_ERROR = {

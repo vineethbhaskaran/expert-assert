@@ -2,11 +2,18 @@ import { Router, Request, Response, request } from "express";
 import * as logger from "../logger/customLogger";
 import Lesson from "../types/Lesson";
 import LessonService from "../service/LessonService";
-import { DEFAULT_PAGE_NUMBER, DEFAULT_PAGE_SIZE, EMPTY_COURSE_ID, EMPTY_SECTION_ID } from "../constants/constants";
+import {
+  DEFAULT_PAGE_NUMBER,
+  DEFAULT_PAGE_SIZE,
+  EMPTY_COURSE_ID,
+  EMPTY_SECTION_ID,
+  STATUS_CODE_400,
+} from "../constants/constants";
 import { ResponseUtils } from "../util/ResponseUtil";
 import multer from "multer";
 import AwsS3Util from "../util/AwsS3Util";
 import path from "path";
+import { FAILED, VALIDATION_ERROR_CODE } from "../constants/errorConstants";
 
 const lessonRoutes = Router();
 
@@ -60,9 +67,25 @@ export const createLesson = lessonRoutes.post("/lessons", async (request, respon
   try {
     const successResponse = await LessonService.saveLesson(lesson);
     response.json(successResponse);
-  } catch (error) {
-    logger.logMessage(error);
-    response.json(error);
+  } catch (errorResponse) {
+    logger.logMessage(errorResponse);
+    if (errorResponse.name === VALIDATION_ERROR_CODE) {
+      return response
+        .json({
+          status: FAILED,
+          error: errorResponse.name,
+          details: errorResponse.data,
+        })
+        .status(STATUS_CODE_400);
+    } else {
+      return response
+        .json({
+          status: FAILED,
+          error: "Save Section Error",
+          details: errorResponse,
+        })
+        .status(STATUS_CODE_400);
+    }
   }
 });
 

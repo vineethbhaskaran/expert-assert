@@ -1,3 +1,4 @@
+import { LessonValidator } from "../validator/LessonValidator";
 import LessonRepository from "../repository/LessonRepository";
 import Lesson from "../types/Lesson";
 
@@ -6,21 +7,28 @@ export default class LessonService {
     return LessonRepository.getAllLessons(pageNo, pageSize, lessonCount);
   }
 
-  static async getLessonsByCourseIdSectionId(pageNo: number, pageSize: number, lessonCount: number,courseId: string, sectionId: string): Promise<any> {
-    return LessonRepository.getLessonsByCourseIdSectionId(pageNo, pageSize, lessonCount,courseId, sectionId);
+  static async getLessonsByCourseIdSectionId(
+    pageNo: number,
+    pageSize: number,
+    lessonCount: number,
+    courseId: string,
+    sectionId: string
+  ): Promise<any> {
+    return LessonRepository.getLessonsByCourseIdSectionId(pageNo, pageSize, lessonCount, courseId, sectionId);
   }
 
   static async getLessonCount(): Promise<any> {
     return LessonRepository.getLessonCount();
   }
   static async getLessonCountByCourseIdSectionId(courseId: string, sectionId: string): Promise<any> {
-    return LessonRepository.getLessonCountByCourseIdSectionId(courseId,sectionId);
+    return LessonRepository.getLessonCountByCourseIdSectionId(courseId, sectionId);
   }
   static async getLessonById(lessonId: string): Promise<any> {
     return LessonRepository.getLessonById(lessonId);
   }
 
   static async saveLesson(lesson: Lesson): Promise<any> {
+    const validateResult = await LessonValidator.validateLesson(lesson);
     return LessonRepository.saveLesson(lesson);
   }
 

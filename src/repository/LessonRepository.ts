@@ -10,7 +10,14 @@ import {
   LESSON_UPDATION_ERROR,
   LESSON_DELETION_ERROR,
 } from "../constants/errorConstants";
-import { STATUS_CODE_400 } from "../constants/constants";
+import {
+  LESSON_OPERATION_CREATE,
+  LESSON_OPERATION_DELETE,
+  LESSON_OPERATION_GET,
+  LESSON_OPERATION_UPDATE,
+  STATUS_CODE_400,
+} from "../constants/constants";
+import { LessonDBErrorHandler } from "../errorHandler/LessonDBErrorHandler";
 
 export default class LessonRepository {
   static async getAllLessons(pageNo: number, pageSize: number, lessonCount: number): Promise<any> {
@@ -23,15 +30,11 @@ export default class LessonRepository {
         .skip(offset)
         .limit(pageSize)
         .sort({ sequence: "asc" })
-        .exec((error: any, lessons: any) => {
+        .exec(async (error: any, lessons: any) => {
           if (error) {
             logger.logMessage(error.message);
-            const customError = new CustomError(
-              STATUS_CODE_400,
-              LESSON_RETRIEVE_ALL_ERROR.label,
-              LESSON_RETRIEVE_ALL_ERROR.details
-            );
-            reject(customError);
+            const lessonRetrivalError = await LessonDBErrorHandler.handleErrors(error.code, LESSON_OPERATION_GET);
+            reject(lessonRetrivalError);
           }
           resolve(lessons);
         });
@@ -54,15 +57,11 @@ export default class LessonRepository {
         .skip(offset)
         .limit(pageSize)
         .sort({ sequence: "asc" })
-        .exec((error: any, lessons: any) => {
+        .exec(async (error: any, lessons: any) => {
           if (error) {
             logger.logMessage(error.message);
-            const customError = new CustomError(
-              STATUS_CODE_400,
-              LESSON_RETRIEVE_ALL_ERROR.label,
-              LESSON_RETRIEVE_ALL_ERROR.details
-            );
-            reject(customError);
+            const lessonRetrivalError = await LessonDBErrorHandler.handleErrors(error.code, LESSON_OPERATION_GET);
+            reject(lessonRetrivalError);
           }
           resolve(lessons);
         });
@@ -79,15 +78,11 @@ export default class LessonRepository {
         .findOne()
         .select({ name: 1, sequence: 1, contents: 1, courseId: 1, sectionId: 1 })
         .where({ isActive: true, courseId: courseId, sectionId: sectionId, sequence: lessonNumber })
-        .exec((error: any, lessons: any) => {
+        .exec(async (error: any, lessons: any) => {
           if (error) {
             logger.logMessage(error.message);
-            const customError = new CustomError(
-              STATUS_CODE_400,
-              LESSON_RETRIEVE_ALL_ERROR.label,
-              LESSON_RETRIEVE_ALL_ERROR.details
-            );
-            reject(customError);
+            const lessonRetrivalError = await LessonDBErrorHandler.handleErrors(error.code, LESSON_OPERATION_GET);
+            reject(lessonRetrivalError);
           }
           resolve(lessons);
         });
@@ -132,15 +127,11 @@ export default class LessonRepository {
         .find()
         .select({ name: 1, sequence: 1, contents: 1, courseId: 1, sectionId: 1 })
         .where({ _id: lessonId, isActive: true })
-        .exec((error: any, lessons: any) => {
+        .exec(async (error: any, lessons: any) => {
           if (error) {
             logger.logMessage(error.message);
-            const customError = new CustomError(
-              STATUS_CODE_400,
-              LESSON_RETRIEVE_BY_ID_ERROR.label,
-              LESSON_RETRIEVE_BY_ID_ERROR.details
-            );
-            reject(customError);
+            const lessonRetrivalError = await LessonDBErrorHandler.handleErrors(error.code, LESSON_OPERATION_GET);
+            reject(lessonRetrivalError);
           }
           resolve(lessons);
         });
@@ -150,15 +141,11 @@ export default class LessonRepository {
   static async saveLesson(lesson: Lesson): Promise<any> {
     const lessonData = new lessonModel(lesson);
     return new Promise((resolve, reject) => {
-      lessonData.save((error: any, dbResponse: any) => {
+      lessonData.save(async (error: any, dbResponse: any) => {
         if (error) {
           logger.logMessage(error.message);
-          const customError = new CustomError(
-            STATUS_CODE_400,
-            LESSON_CREATION_ERROR.label,
-            LESSON_CREATION_ERROR.details
-          );
-          reject(customError);
+          const lessonCreationError = await LessonDBErrorHandler.handleErrors(error.code, LESSON_OPERATION_CREATE);
+          reject(lessonCreationError);
         }
         logger.logMessage("Respone from DB=" + JSON.stringify(dbResponse, null, 2));
         resolve(true);
@@ -169,15 +156,11 @@ export default class LessonRepository {
   static async updateLesson(lesson: Lesson): Promise<any> {
     return new Promise((resolve, reject) => {
       const filter = { _id: lesson.id };
-      lessonModel.update(filter, lesson, (error: any, dbResponse: any) => {
+      lessonModel.update(filter, lesson, async (error: any, dbResponse: any) => {
         if (error) {
           logger.logMessage(error.message);
-          const customError = new CustomError(
-            STATUS_CODE_400,
-            LESSON_UPDATION_ERROR.label,
-            LESSON_UPDATION_ERROR.details
-          );
-          reject(customError);
+          const lessonUpdationError = await LessonDBErrorHandler.handleErrors(error.code, LESSON_OPERATION_UPDATE);
+          reject(lessonUpdationError);
         }
         logger.logMessage("Respone from DB=" + JSON.stringify(dbResponse, null, 2));
         resolve(dbResponse);
@@ -187,15 +170,11 @@ export default class LessonRepository {
   static async softDeleteLesson(lessonId: string): Promise<any> {
     return new Promise((resolve, reject) => {
       const filter = { _id: lessonId };
-      lessonModel.findOneAndUpdate(filter, { isActive: false }, (error: any, dbResponse: any) => {
+      lessonModel.findOneAndUpdate(filter, { isActive: false }, async (error: any, dbResponse: any) => {
         if (error) {
           logger.logMessage(error.message);
-          const customError = new CustomError(
-            STATUS_CODE_400,
-            LESSON_DELETION_ERROR.label,
-            LESSON_DELETION_ERROR.details
-          );
-          reject(customError);
+          const lessonDeletionError = await LessonDBErrorHandler.handleErrors(error.code, LESSON_OPERATION_DELETE);
+          reject(lessonDeletionError);
         }
         logger.logMessage("Respone from DB=" + JSON.stringify(dbResponse, null, 2));
         resolve(true);
