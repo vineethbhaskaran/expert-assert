@@ -1,0 +1,82 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$ref": "#/definitions/Lesson",
+  "definitions": {
+    "Lesson": {
+      "type": "object",
+      "properties": {
+        "createdBy": {
+          "type": "object",
+          "properties": {
+            "length": {
+              "type": "number"
+            }
+          },
+          "required": [
+            "length"
+          ],
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "createdDate": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updatedBy": {
+          "type": "object",
+          "properties": {
+            "length": {
+              "type": "number"
+            }
+          },
+          "required": [
+            "length"
+          ],
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "updatedDate": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "name": {
+          "type": "string"
+        },
+        "lessonSequence": {
+          "type": "number"
+        },
+        "contents": {
+          "type": "string"
+        },
+        "fileLocation": {
+          "type": "string"
+        },
+        "tenantId": {
+          "type": "string"
+        },
+        "courseId": {
+          "type": "string"
+        },
+        "sectionId": {
+          "type": "string"
+        },
+        "isFinalLesson": {
+          "type": "boolean"
+        },
+        "isActive": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "name",
+        "lessonSequence",
+        "tenantId",
+        "courseId",
+        "sectionId"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

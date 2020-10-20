@@ -1,0 +1,75 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$ref": "#/definitions/Section",
+  "definitions": {
+    "Section": {
+      "type": "object",
+      "properties": {
+        "createdBy": {
+          "type": "object",
+          "properties": {
+            "length": {
+              "type": "number"
+            }
+          },
+          "required": [
+            "length"
+          ],
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "createdDate": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updatedBy": {
+          "type": "object",
+          "properties": {
+            "length": {
+              "type": "number"
+            }
+          },
+          "required": [
+            "length"
+          ],
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "updatedDate": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "name": {
+          "type": "string"
+        },
+        "sectionSequence": {
+          "type": "number"
+        },
+        "numberOfLessons": {
+          "type": "number"
+        },
+        "tenantId": {
+          "type": "string"
+        },
+        "courseId": {
+          "type": "string"
+        },
+        "isFinalSection": {
+          "type": "boolean"
+        },
+        "isActive": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "name",
+        "sectionSequence",
+        "tenantId",
+        "courseId"
+      ],
+      "additionalProperties": false
+    }
+  }
+}
