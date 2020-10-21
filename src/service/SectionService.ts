@@ -45,4 +45,8 @@ export default class SectionService {
   static async getSectionByCourseAndSectionSequence(courseId: string, sectionSequence: number): Promise<any> {
     return SectionRepository.getSectionByCourseAndPosition(courseId, sectionSequence);
   }
+
+  static async getLastSectionByCourse(courseId: string): Promise<any> {
+    return SectionRepository.getLastSectionByCourse(courseId);
+  }
 }

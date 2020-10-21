@@ -63,6 +63,13 @@ export const createSection = sectionRoutes.post("/sections", async (request: Req
   try {
     await SectionHelper.validateSectionSeqence(section);
 
+    //BEFORE SAVING: set last section final as false
+    let lastSection = await SectionService.getLastSectionByCourse(section.courseId);
+    if (typeof lastSection !== "undefined" && lastSection !== null) {
+      lastSection.isFinalSection = false;
+      await SectionService.updateSection(lastSection);
+    }
+
     const successResponse = await SectionService.saveSection(section);
     //TODO :move to different class
     //Incrementing number of sections in course
@@ -71,6 +78,11 @@ export const createSection = sectionRoutes.post("/sections", async (request: Req
     course.numberOfSections = updatedNumberOfSections;
     let isUpdated = await CourseService.updateCourse(course);
     logger.logMessage("Number of Sections updated");
+
+    //AFTER SAVING: set last section final as true
+    lastSection = await SectionService.getLastSectionByCourse(section.courseId);
+    lastSection.isFinalSection = true;
+    await SectionService.updateSection(lastSection);
 
     return response.json(successResponse);
   } catch (errorResponse) {
@@ -105,7 +117,18 @@ export const updateSection = sectionRoutes.put("/sections/:sectionId", async (re
     }
     await SectionHelper.validateSectionSeqence(currentSection);
 
+    //BEFORE UPDATING: set last section final as false
+    let lastSection = await SectionService.getLastSectionByCourse(currentSection.courseId);
+    lastSection.isFinalSection = false;
+    await SectionService.updateSection(lastSection);
+
     const successResponse = await SectionService.updateSection(section);
+
+    //AFTER UPDATING: set last section final as true
+    lastSection = await SectionService.getLastSectionByCourse(currentSection.courseId);
+    lastSection.isFinalSection = true;
+    await SectionService.updateSection(lastSection);
+
     return response.json(successResponse);
   } catch (errorResponse) {
     logger.logMessage(errorResponse);
