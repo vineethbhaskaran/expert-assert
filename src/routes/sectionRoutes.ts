@@ -99,11 +99,30 @@ export const updateSection = sectionRoutes.put("/sections/:sectionId", async (re
   const section = <Section>request.body;
   section.id = request.params.sectionId;
   try {
+    const currentSection = await SectionService.getSectionById(section.id);
+    await SectionHelper.validateSectionSeqence(currentSection);
+
     const successResponse = await SectionService.updateSection(section);
     return response.json(successResponse);
   } catch (errorResponse) {
     logger.logMessage(errorResponse);
-    return response.json(errorResponse);
+    if (errorResponse.name === VALIDATION_ERROR_CODE) {
+      return response
+        .json({
+          status: FAILED,
+          error: errorResponse.name,
+          details: errorResponse.data,
+        })
+        .status(STATUS_CODE_400);
+    } else {
+      return response
+        .json({
+          status: FAILED,
+          error: "Save Section Error",
+          details: errorResponse,
+        })
+        .status(STATUS_CODE_400);
+    }
   }
 });
 export const deleteSection = sectionRoutes.delete(
