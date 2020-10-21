@@ -68,6 +68,14 @@ export const createLesson = lessonRoutes.post("/lessons", async (request, respon
   const lesson: Lesson = <Lesson>request.body;
   try {
     await LessonHelper.validateLessonSeqence(lesson);
+
+    //BEFORE SAVING: set last section final as false
+    let lastLesson = await LessonService.getLastLessonByCourseIdSectionId(lesson.courseId, lesson.sectionId);
+    if (typeof lastLesson !== "undefined" && lastLesson !== null) {
+      lastLesson.isFinalLesson = false;
+      await LessonService.updateLesson(lastLesson);
+    }
+
     const successResponse = await LessonService.saveLesson(lesson);
 
     //TODO :move to different class
@@ -76,6 +84,13 @@ export const createLesson = lessonRoutes.post("/lessons", async (request, respon
     let updatedNumberOfLessons = section.numberOfLessons + 1;
     section.numberOfLessons = updatedNumberOfLessons;
     let isUpdated = await SectionService.updateSection(section);
+
+    //AFTER SAVING: set last section final as false
+    lastLesson = await LessonService.getLastLessonByCourseIdSectionId(lesson.courseId, lesson.sectionId);
+    if (typeof lastLesson !== "undefined" && lastLesson !== null) {
+      lastLesson.isFinalLesson = true;
+      await LessonService.updateLesson(lastLesson);
+    }
 
     response.json(successResponse);
   } catch (errorResponse) {
@@ -110,7 +125,25 @@ export const updateLesson = lessonRoutes.put("/lessons/:lessonId", async (reques
     }
     await LessonHelper.validateLessonSeqence(currentLesson);
 
+    //BEFORE SAVING: set last section final as false
+    let lastLesson = await LessonService.getLastLessonByCourseIdSectionId(
+      currentLesson.courseId,
+      currentLesson.sectionId
+    );
+    if (typeof lastLesson !== "undefined" && lastLesson !== null) {
+      lastLesson.isFinalLesson = false;
+      await LessonService.updateLesson(lastLesson);
+    }
+
     const successResponse = await LessonService.updateLesson(lesson);
+
+    //AFTER SAVING: set last section final as false
+    lastLesson = await LessonService.getLastLessonByCourseIdSectionId(currentLesson.courseId, currentLesson.sectionId);
+    if (typeof lastLesson !== "undefined" && lastLesson !== null) {
+      lastLesson.isFinalLesson = true;
+      await LessonService.updateLesson(lastLesson);
+    }
+
     return response.json(successResponse);
   } catch (errorResponse) {
     logger.logMessage(errorResponse);

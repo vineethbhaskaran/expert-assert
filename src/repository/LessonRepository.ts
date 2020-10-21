@@ -181,4 +181,30 @@ export default class LessonRepository {
       });
     });
   }
+
+  /**
+   * Gets last lesson by course id section id
+   * @param courseId
+   * @param sectionId
+   * @returns last lesson by course id section id
+   */
+  static async getLastLessonByCourseIdSectionId(courseId: string, sectionId: string): Promise<any> {
+    return new Promise((resolve, reject) => {
+      lessonModel
+        .find()
+        .select({ name: 1, lessonSequence: 1, contents: 1, tenantId: 1, courseId: 1, sectionId: 1, isFinalLesson: 1 })
+        .where({ isActive: true, courseId: courseId, sectionId: sectionId })
+        .limit(1)
+        .sort({ lessonSequence: "desc" })
+        .exec(async (error: any, lessons: any) => {
+          if (error) {
+            logger.logMessage(error.message);
+            const lessonRetrivalError = await LessonDBErrorHandler.handleErrors(error.code, LESSON_OPERATION_GET);
+            reject(lessonRetrivalError);
+          }
+          let lastLesson = lessons[0];
+          resolve(lastLesson);
+        });
+    });
+  }
 }
