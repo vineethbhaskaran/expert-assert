@@ -25,11 +25,11 @@ export default class LessonRepository {
     return new Promise((resolve, reject) => {
       lessonModel
         .find()
-        .select({ name: 1, sequence: 1, contents: 1, courseId: 1, sectionId: 1 })
+        .select({ name: 1, lessonSequence: 1, contents: 1, tenantId: 1, courseId: 1, sectionId: 1, isFinalLesson: 1 })
         .where({ isActive: true })
         .skip(offset)
         .limit(pageSize)
-        .sort({ sequence: "asc" })
+        .sort({ lessonSequence: "asc" })
         .exec(async (error: any, lessons: any) => {
           if (error) {
             logger.logMessage(error.message);
@@ -52,11 +52,11 @@ export default class LessonRepository {
     return new Promise((resolve, reject) => {
       lessonModel
         .find()
-        .select({ name: 1, sequence: 1, contents: 1, courseId: 1, sectionId: 1 })
+        .select({ name: 1, lessonSequence: 1, contents: 1, tenantId: 1, courseId: 1, sectionId: 1, isFinalLesson: 1 })
         .where({ isActive: true, courseId: courseId, sectionId: sectionId })
         .skip(offset)
         .limit(pageSize)
-        .sort({ sequence: "asc" })
+        .sort({ lessonSequence: "asc" })
         .exec(async (error: any, lessons: any) => {
           if (error) {
             logger.logMessage(error.message);
@@ -71,13 +71,13 @@ export default class LessonRepository {
   static async getLessonsByCourseIdSectionIdPosition(
     courseId: string,
     sectionId: string,
-    lessonNumber: number
+    lessonSequence: number
   ): Promise<any> {
     return new Promise((resolve, reject) => {
       lessonModel
         .findOne()
-        .select({ name: 1, sequence: 1, contents: 1, courseId: 1, sectionId: 1 })
-        .where({ isActive: true, courseId: courseId, sectionId: sectionId, sequence: lessonNumber })
+        .select({ name: 1, lessonSequence: 1, contents: 1, tenantId: 1, courseId: 1, sectionId: 1, isFinalLesson: 1 })
+        .where({ isActive: true, courseId: courseId, sectionId: sectionId, lessonSequence: lessonSequence })
         .exec(async (error: any, lessons: any) => {
           if (error) {
             logger.logMessage(error.message);
@@ -125,7 +125,7 @@ export default class LessonRepository {
     return new Promise((resolve, reject) => {
       lessonModel
         .findOne()
-        .select({ name: 1, sequence: 1, contents: 1, courseId: 1, sectionId: 1 })
+        .select({ name: 1, lessonSequence: 1, contents: 1, tenantId: 1, courseId: 1, sectionId: 1, isFinalLesson: 1 })
         .where({ _id: lessonId, isActive: true })
         .exec(async (error: any, lessons: any) => {
           if (error) {

@@ -15,6 +15,7 @@ import AwsS3Util from "../util/AwsS3Util";
 import path from "path";
 import { FAILED, VALIDATION_ERROR_CODE } from "../constants/errorConstants";
 import SectionService from "../service/SectionService";
+import LessonHelper from "../helper/LessonHelper";
 
 const lessonRoutes = Router();
 
@@ -66,6 +67,7 @@ export const getLessonById = lessonRoutes.get("/lessons/:lessonId", async (reque
 export const createLesson = lessonRoutes.post("/lessons", async (request, response) => {
   const lesson: Lesson = <Lesson>request.body;
   try {
+    await LessonHelper.validateLessonSeqence(lesson);
     const successResponse = await LessonService.saveLesson(lesson);
 
     //TODO :move to different class
@@ -102,11 +104,33 @@ export const updateLesson = lessonRoutes.put("/lessons/:lessonId", async (reques
   const lesson = <Lesson>request.body;
   lesson.id = request.params.lessonId;
   try {
+    const currentLesson = await LessonService.getLessonById(lesson.id);
+    if (typeof lesson.lessonSequence !== "undefined" && lesson.lessonSequence !== null) {
+      currentLesson.lessonSequence = lesson.lessonSequence;
+    }
+    await LessonHelper.validateLessonSeqence(currentLesson);
+
     const successResponse = await LessonService.updateLesson(lesson);
     return response.json(successResponse);
   } catch (errorResponse) {
     logger.logMessage(errorResponse);
-    return response.json(errorResponse);
+    if (errorResponse.name === VALIDATION_ERROR_CODE) {
+      return response
+        .json({
+          status: FAILED,
+          error: errorResponse.name,
+          details: errorResponse.data,
+        })
+        .status(STATUS_CODE_400);
+    } else {
+      return response
+        .json({
+          status: FAILED,
+          error: "Save Section Error",
+          details: errorResponse,
+        })
+        .status(STATUS_CODE_400);
+    }
   }
 });
 

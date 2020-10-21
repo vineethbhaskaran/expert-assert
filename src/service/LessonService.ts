@@ -39,4 +39,11 @@ export default class LessonService {
   static async softDeleteLesson(lessonId: string): Promise<any> {
     return LessonRepository.softDeleteLesson(lessonId);
   }
+  static async getLessonsByCourseIdSectionIdLessonSequence(
+    courseId: string,
+    sectionId: string,
+    lessonsequence: number
+  ): Promise<any> {
+    return LessonRepository.getLessonsByCourseIdSectionIdPosition(courseId, sectionId, lessonsequence);
+  }
 }

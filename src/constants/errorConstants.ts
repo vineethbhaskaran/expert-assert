@@ -110,6 +110,11 @@ export const LESSON_DELETION_ERROR = {
   details: "Error while deleting the lesson",
 };
 
+export const LESSON_SEQUENCE_DUPLICATE_ERROR = {
+  label: "LESSON_SEQUENCE_DUPLICATE_ERROR",
+  details: "This Lesson Sequence already Exists",
+};
+
 export const LESSON_DEFAULT_ERROR = {
   label: "LESSON_DEFAULT_ERROR",
   details: "Generic Error in lesson",
