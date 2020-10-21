@@ -70,6 +70,11 @@ export const SECTION_DELETION_ERROR = {
   details: "Error while deleting the section",
 };
 
+export const SECTION_SEQUENCE_DUPLICATE_ERROR = {
+  label: "SECTION_SEQUENCE_DUPLICATE_ERROR",
+  details: "This Section Sequence already Exists",
+};
+
 export const SECTION_DEFAULT_ERROR = {
   label: "SECTION_DEFAULT_ERROR",
   details: "Generic error for Section",

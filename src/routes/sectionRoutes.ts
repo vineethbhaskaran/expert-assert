@@ -6,6 +6,7 @@ import { ResponseUtils } from "../util/ResponseUtil";
 import { DEFAULT_PAGE_NUMBER, DEFAULT_PAGE_SIZE, EMPTY_COURSE_ID, STATUS_CODE_400 } from "../constants/constants";
 import { FAILED, VALIDATION_ERROR_CODE } from "../constants/errorConstants";
 import CourseService from "../service/courseService";
+import SectionHelper from "../helper/SectionHelper";
 
 const sectionRoutes = Router();
 /** If courseId passed as parameter. This endpoint will return the sections belong to that
@@ -60,6 +61,8 @@ export const getSectionById = sectionRoutes.get(
 export const createSection = sectionRoutes.post("/sections", async (request: Request, response: Response) => {
   const section = <Section>request.body;
   try {
+    await SectionHelper.validateSectionSeqence(section);
+
     const successResponse = await SectionService.saveSection(section);
     //TODO :move to different class
     //Incrementing number of sections in course
@@ -67,8 +70,8 @@ export const createSection = sectionRoutes.post("/sections", async (request: Req
     let updatedNumberOfSections = course.numberOfSections + 1;
     course.numberOfSections = updatedNumberOfSections;
     let isUpdated = await CourseService.updateCourse(course);
-
     logger.logMessage("Number of Sections updated");
+
     return response.json(successResponse);
   } catch (errorResponse) {
     logger.logMessage(errorResponse);

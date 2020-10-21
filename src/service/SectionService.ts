@@ -41,4 +41,8 @@ export default class SectionService {
   static async softDeleteSection(sectionId: string): Promise<any> {
     return SectionRepository.softDeleteSection(sectionId);
   }
+
+  static async getSectionByCourseAndSectionSequence(courseId: string, sectionSequence: number): Promise<any> {
+    return SectionRepository.getSectionByCourseAndPosition(courseId, sectionSequence);
+  }
 }
