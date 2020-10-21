@@ -100,6 +100,9 @@ export const updateSection = sectionRoutes.put("/sections/:sectionId", async (re
   section.id = request.params.sectionId;
   try {
     const currentSection = await SectionService.getSectionById(section.id);
+    if (typeof section.sectionSequence !== "undefined" && section.sectionSequence !== null) {
+      currentSection.sectionSequence = section.sectionSequence;
+    }
     await SectionHelper.validateSectionSeqence(currentSection);
 
     const successResponse = await SectionService.updateSection(section);
