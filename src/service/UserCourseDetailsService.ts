@@ -7,10 +7,10 @@ import { CourseNavigationDetails } from "../types/CourseNavigationDetails";
 import SectionService from "./SectionService";
 import LessonService from "./LessonService";
 import { SEQUENCE_ONE } from "../constants/constants";
+import Lesson from "../types/Lesson";
+import Section from "../types/Section";
 
-const POSITION_ONE = 1;
 const TEST_TENANT_ID = "testTenantId";
-const TEST_USER_ID = "testUserId";
 
 export default class UserCourseDetailsService {
   /**
@@ -58,6 +58,69 @@ export default class UserCourseDetailsService {
       }
     });
   }
+
+  static async getNextPageDetails(courseId: string, sectionId: string, lessonId: string, userId: string): Promise<any> {
+    return new Promise(async (resolve, reject) => {
+      let lesson = <Lesson>await LessonService.getLessonById(lessonId);
+
+      if (lesson.isFinalLesson === false) {
+        let nextLesson = <Lesson>(
+          await LessonService.getNextLessonByCourseIdSectionId(lesson.courseId, lesson.sectionId, lesson.lessonSequence)
+        );
+        //updating userCourseDetail table
+        await UserCourseDetailsService._updateUserCourseDetails(userId, nextLesson);
+        //send details to redirect to display age content
+        let courseNavigationDetails = UserCourseDetailsService._createCourseNavigationDetails(nextLesson);
+        resolve(courseNavigationDetails);
+      } else {
+        let currentSection = <Section>await SectionService.getSectionById(sectionId);
+        if (currentSection.isFinalSection === true) {
+          //TODO:End of the course
+        } else {
+          let nextSection = <Section>(
+            await SectionService.getNextSection(currentSection.courseId, currentSection.sectionSequence)
+          );
+          //first lesson of next section
+          let nextLesson = await LessonService.getLessonsByCourseIdSectionIdLessonSequence(
+            nextSection.courseId,
+            nextSection.id,
+            SEQUENCE_ONE
+          );
+
+          //updating userCourseDetail table
+          await UserCourseDetailsService._updateUserCourseDetails(userId, nextLesson);
+          //send details to redirect to display age content
+          let courseNavigationDetails = UserCourseDetailsService._createCourseNavigationDetails(nextLesson);
+          resolve(courseNavigationDetails);
+        }
+      }
+    });
+  }
+  /**
+   * Updates user course details
+   * @param userId
+   * @param nextLesson
+   */
+  private static async _updateUserCourseDetails(userId: string, nextLesson: Lesson) {
+    let userCourseDetail = {
+      userId: userId,
+      tenantId: TEST_TENANT_ID,
+      courseId: nextLesson.courseId,
+      currentSectionId: nextLesson.sectionId,
+      currentLessonId: nextLesson.id,
+    };
+    //@ts-ignore
+    let isUpdated = await UserCourseDetailsRepository.updateUserCourseDetail(userCourseDetail);
+  }
+  /**
+   * Creates course navigation details
+   * @param nextLesson
+   * @returns
+   */
+  private static _createCourseNavigationDetails(nextLesson: Lesson) {
+    return new CourseNavigationDetails(nextLesson.courseId, nextLesson.sectionId, nextLesson.id);
+  }
+
   /*
   // =========  OLD =========
   static async loadfirstPage(courseId: string): Promise<any> {
