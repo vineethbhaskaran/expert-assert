@@ -49,4 +49,20 @@ export default class LessonService {
   static async getLastLessonByCourseIdSectionId(courseId: string, sectionId: string): Promise<any> {
     return LessonRepository.getLastLessonByCourseIdSectionId(courseId, sectionId);
   }
+
+  static async getNextLessonByCourseIdSectionId(
+    courseId: string,
+    sectionId: string,
+    lessonSequence: number
+  ): Promise<any> {
+    return LessonRepository.getNextLessonByCourseIdSectionId(courseId, sectionId, lessonSequence);
+  }
+
+  static async getPrevoiusLessonByCourseIdSectionId(
+    courseId: string,
+    sectionId: string,
+    lessonSequence: number
+  ): Promise<any> {
+    return LessonRepository.getPrevoiusLessonByCourseIdSectionId(courseId, sectionId, lessonSequence);
+  }
 }

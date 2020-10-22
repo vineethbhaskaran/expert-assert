@@ -2,7 +2,7 @@ import Section from "../types/Section";
 import * as logger from "../logger/customLogger";
 import { sectionModel } from "../schema/SectionSchema";
 import CustomError from "../types/CustomError";
-import { SECTION_COUNT_ERROR } from "../constants/errorConstants";
+import { SECTION_COUNT_ERROR, SECTION_NOT_FOUND_ERROR } from "../constants/errorConstants";
 import {
   SECTION_OPERATION_CREATE,
   SECTION_OPERATION_DELETE,
@@ -263,15 +263,17 @@ export default class SectionRepository {
             logger.logMessage(error.message);
             const sectionRetrieveError = await SectionDBErrorHandler.handleErrors(error.code, SECTION_OPERATION_GET);
             reject(sectionRetrieveError);
+          } else if (sections.length > 0) {
+            let nextSection = sections[0];
+            resolve(nextSection);
+          } else {
+            const sectionNotFoundError = new CustomError(
+              STATUS_CODE_400,
+              SECTION_NOT_FOUND_ERROR.label,
+              SECTION_NOT_FOUND_ERROR.details
+            );
+            reject(sectionNotFoundError);
           }
-
-          let nextSection = null;
-          if (sections.length > 0) {
-            nextSection = sections[0];
-          }
-          //converting list to object
-
-          resolve(nextSection);
         });
     });
   }
@@ -289,14 +291,17 @@ export default class SectionRepository {
             logger.logMessage(error.message);
             const sectionRetrieveError = await SectionDBErrorHandler.handleErrors(error.code, SECTION_OPERATION_GET);
             reject(sectionRetrieveError);
+          } else if (sections.length > 0) {
+            let prevSection = sections[0];
+            resolve(prevSection);
+          } else {
+            const sectionNotFoundError = new CustomError(
+              STATUS_CODE_400,
+              SECTION_NOT_FOUND_ERROR.label,
+              SECTION_NOT_FOUND_ERROR.details
+            );
+            reject(sectionNotFoundError);
           }
-          let prevSection = null;
-          //converting list to object
-          if (sections.length > 0) {
-            prevSection = sections[0];
-          }
-
-          resolve(prevSection);
         });
     });
   }

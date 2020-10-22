@@ -2,14 +2,7 @@ import { lessonModel } from "../schema/lessonSchema";
 import CustomError from "../types/CustomError";
 import * as logger from "../logger/customLogger";
 import Lesson from "../types/Lesson";
-import {
-  LESSON_CREATION_ERROR,
-  LESSON_RETRIEVE_ALL_ERROR,
-  LESSON_RETRIEVE_BY_ID_ERROR,
-  LESSON_COUNT_ERROR,
-  LESSON_UPDATION_ERROR,
-  LESSON_DELETION_ERROR,
-} from "../constants/errorConstants";
+import { LESSON_COUNT_ERROR } from "../constants/errorConstants";
 import {
   LESSON_OPERATION_CREATE,
   LESSON_OPERATION_DELETE,
@@ -18,6 +11,7 @@ import {
   STATUS_CODE_400,
 } from "../constants/constants";
 import { LessonDBErrorHandler } from "../errorHandler/LessonDBErrorHandler";
+import { NO_DATA_FOUND } from "../constants/ErrorCodes";
 
 export default class LessonRepository {
   static async getAllLessons(pageNo: number, pageSize: number, lessonCount: number): Promise<any> {
@@ -33,7 +27,10 @@ export default class LessonRepository {
         .exec(async (error: any, lessons: any) => {
           if (error) {
             logger.logMessage(error.message);
-            const lessonRetrivalError = await LessonDBErrorHandler.handleErrors(error.code, LESSON_OPERATION_GET);
+            const lessonRetrivalError = await LessonDBErrorHandler.handleErrors(
+              error.code.toString(),
+              LESSON_OPERATION_GET
+            );
             reject(lessonRetrivalError);
           }
           resolve(lessons);
@@ -60,7 +57,10 @@ export default class LessonRepository {
         .exec(async (error: any, lessons: any) => {
           if (error) {
             logger.logMessage(error.message);
-            const lessonRetrivalError = await LessonDBErrorHandler.handleErrors(error.code, LESSON_OPERATION_GET);
+            const lessonRetrivalError = await LessonDBErrorHandler.handleErrors(
+              error.code.toString(),
+              LESSON_OPERATION_GET
+            );
             reject(lessonRetrivalError);
           }
           resolve(lessons);
@@ -81,7 +81,10 @@ export default class LessonRepository {
         .exec(async (error: any, lessons: any) => {
           if (error) {
             logger.logMessage(error.message);
-            const lessonRetrivalError = await LessonDBErrorHandler.handleErrors(error.code, LESSON_OPERATION_GET);
+            const lessonRetrivalError = await LessonDBErrorHandler.handleErrors(
+              error.code.toString(),
+              LESSON_OPERATION_GET
+            );
             reject(lessonRetrivalError);
           }
           resolve(lessons);
@@ -130,7 +133,10 @@ export default class LessonRepository {
         .exec(async (error: any, lessons: any) => {
           if (error) {
             logger.logMessage(error.message);
-            const lessonRetrivalError = await LessonDBErrorHandler.handleErrors(error.code, LESSON_OPERATION_GET);
+            const lessonRetrivalError = await LessonDBErrorHandler.handleErrors(
+              error.code.toString(),
+              LESSON_OPERATION_GET
+            );
             reject(lessonRetrivalError);
           }
           resolve(lessons);
@@ -144,7 +150,10 @@ export default class LessonRepository {
       lessonData.save(async (error: any, dbResponse: any) => {
         if (error) {
           logger.logMessage(error.message);
-          const lessonCreationError = await LessonDBErrorHandler.handleErrors(error.code, LESSON_OPERATION_CREATE);
+          const lessonCreationError = await LessonDBErrorHandler.handleErrors(
+            error.code.toString(),
+            LESSON_OPERATION_CREATE
+          );
           reject(lessonCreationError);
         }
         logger.logMessage("Respone from DB=" + JSON.stringify(dbResponse, null, 2));
@@ -159,7 +168,10 @@ export default class LessonRepository {
       lessonModel.update(filter, lesson, async (error: any, dbResponse: any) => {
         if (error) {
           logger.logMessage(error.message);
-          const lessonUpdationError = await LessonDBErrorHandler.handleErrors(error.code, LESSON_OPERATION_UPDATE);
+          const lessonUpdationError = await LessonDBErrorHandler.handleErrors(
+            error.code.toString(),
+            LESSON_OPERATION_UPDATE
+          );
           reject(lessonUpdationError);
         }
         logger.logMessage("Respone from DB=" + JSON.stringify(dbResponse, null, 2));
@@ -173,7 +185,10 @@ export default class LessonRepository {
       lessonModel.findOneAndUpdate(filter, { isActive: false }, async (error: any, dbResponse: any) => {
         if (error) {
           logger.logMessage(error.message);
-          const lessonDeletionError = await LessonDBErrorHandler.handleErrors(error.code, LESSON_OPERATION_DELETE);
+          const lessonDeletionError = await LessonDBErrorHandler.handleErrors(
+            error.code.toString(),
+            LESSON_OPERATION_DELETE
+          );
           reject(lessonDeletionError);
         }
         logger.logMessage("Respone from DB=" + JSON.stringify(dbResponse, null, 2));
@@ -199,11 +214,76 @@ export default class LessonRepository {
         .exec(async (error: any, lessons: any) => {
           if (error) {
             logger.logMessage(error.message);
-            const lessonRetrivalError = await LessonDBErrorHandler.handleErrors(error.code, LESSON_OPERATION_GET);
+            const lessonRetrivalError = await LessonDBErrorHandler.handleErrors(
+              error.code.toString(),
+              LESSON_OPERATION_GET
+            );
             reject(lessonRetrivalError);
           }
           let lastLesson = lessons[0];
           resolve(lastLesson);
+        });
+    });
+  }
+
+  static async getNextLessonByCourseIdSectionId(
+    courseId: string,
+    sectionId: string,
+    lessonSequence: number
+  ): Promise<any> {
+    return new Promise((resolve, reject) => {
+      lessonModel
+        .find()
+        .select({ name: 1, lessonSequence: 1, contents: 1, tenantId: 1, courseId: 1, sectionId: 1, isFinalLesson: 1 })
+        .where({ isActive: true, courseId: courseId, sectionId: sectionId, lessonSequence: { $gt: lessonSequence } })
+        .limit(1)
+        .sort({ lessonSequence: "asc" })
+        .exec(async (error: any, lessons: any) => {
+          if (error) {
+            logger.logMessage(error.message);
+            const lessonRetrivalError = await LessonDBErrorHandler.handleErrors(
+              error.code.toString(),
+              LESSON_OPERATION_GET
+            );
+            reject(lessonRetrivalError);
+          } else if (lessons.length > 0) {
+            let nextLesson = lessons[0];
+            resolve(nextLesson);
+          } else {
+            const lessonRetrivalError = await LessonDBErrorHandler.handleErrors(NO_DATA_FOUND, LESSON_OPERATION_GET);
+            reject(lessonRetrivalError);
+          }
+        });
+    });
+  }
+
+  static async getPrevoiusLessonByCourseIdSectionId(
+    courseId: string,
+    sectionId: string,
+    lessonSequence: number
+  ): Promise<any> {
+    return new Promise((resolve, reject) => {
+      lessonModel
+        .find()
+        .select({ name: 1, lessonSequence: 1, contents: 1, tenantId: 1, courseId: 1, sectionId: 1, isFinalLesson: 1 })
+        .where({ isActive: true, courseId: courseId, sectionId: sectionId, lessonSequence: { $lt: lessonSequence } })
+        .limit(1)
+        .sort({ lessonSequence: "desc" })
+        .exec(async (error: any, lessons: any) => {
+          if (error) {
+            logger.logMessage(error.message);
+            const lessonRetrivalError = await LessonDBErrorHandler.handleErrors(
+              error.code.toString(),
+              LESSON_OPERATION_GET
+            );
+            reject(lessonRetrivalError);
+          } else if (lessons.length > 0) {
+            let nextLesson = lessons[0];
+            resolve(nextLesson);
+          } else {
+            const lessonRetrivalError = await LessonDBErrorHandler.handleErrors(NO_DATA_FOUND, LESSON_OPERATION_GET);
+            reject(lessonRetrivalError);
+          }
         });
     });
   }

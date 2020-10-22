@@ -2,6 +2,7 @@ import {
   LESSON_CREATION_ERROR,
   LESSON_DEFAULT_ERROR,
   LESSON_DELETION_ERROR,
+  LESSON_NOT_FOUND_ERROR,
   LESSON_RETRIEVE_ERROR,
   LESSON_UPDATION_ERROR,
 } from "../constants/errorConstants";
@@ -13,10 +14,18 @@ import {
   STATUS_CODE_400,
 } from "../constants/constants";
 import CustomError from "../types/CustomError";
+import { NO_DATA_FOUND } from "../constants/ErrorCodes";
 
 export class LessonDBErrorHandler {
-  static async handleErrors(mongoErrorCode: number, operationType: string): Promise<any> {
-    switch (mongoErrorCode) {
+  static async handleErrors(errorCode: string, operationType: string): Promise<any> {
+    switch (errorCode) {
+      case NO_DATA_FOUND:
+        const noDataFoundError = new CustomError(
+          STATUS_CODE_400,
+          LESSON_NOT_FOUND_ERROR.label,
+          LESSON_NOT_FOUND_ERROR.details
+        );
+        return noDataFoundError;
       default:
         return this._getDefaultLessonErrors(operationType);
     }

@@ -75,6 +75,11 @@ export const SECTION_SEQUENCE_DUPLICATE_ERROR = {
   details: "This Section Sequence already Exists",
 };
 
+export const SECTION_NOT_FOUND_ERROR = {
+  label: "SECTION_NOT_FOUND_ERROR",
+  details: "No data found for this Section",
+};
+
 export const SECTION_DEFAULT_ERROR = {
   label: "SECTION_DEFAULT_ERROR",
   details: "Generic error for Section",
@@ -113,6 +118,11 @@ export const LESSON_DELETION_ERROR = {
 export const LESSON_SEQUENCE_DUPLICATE_ERROR = {
   label: "LESSON_SEQUENCE_DUPLICATE_ERROR",
   details: "This Lesson Sequence already Exists",
+};
+
+export const LESSON_NOT_FOUND_ERROR = {
+  label: "LESSON_NOT_FOUND_ERROR",
+  details: "No data found for this Lesson",
 };
 
 export const LESSON_DEFAULT_ERROR = {
