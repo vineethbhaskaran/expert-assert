@@ -1,6 +1,6 @@
 import AuditFields from "./AuditFields";
 
-export default interface UserCourseProgress extends AuditFields {
+export default interface UserCourseDetails extends AuditFields {
   userId: String;
   tenantId: String;
   courseId: String;

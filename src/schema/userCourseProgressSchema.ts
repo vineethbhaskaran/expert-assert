@@ -1,8 +1,8 @@
 import mongoose, { Schema } from "mongoose";
-import UserCourseProgress from "../types/UserCourseProgress";
+import UserCourseDetails from "../types/UserCourseDetails";
 import { auditSchema } from "./auditSchema";
 
-export const userCourseProgressSchema: Schema = new Schema({
+export const userCourseDetailsSchema: Schema = new Schema({
   userId: { type: String },
   tenantId: { type: String },
   courseId: { type: Schema.Types.ObjectId, ref: "courseSchema" },
@@ -11,8 +11,8 @@ export const userCourseProgressSchema: Schema = new Schema({
   timeSpent: { type: Number },
 });
 
-userCourseProgressSchema.add(auditSchema);
-export const userCourseProgressModel = mongoose.model<UserCourseProgress>(
-  "userCourseProgressSchema",
-  userCourseProgressSchema
+userCourseDetailsSchema.add(auditSchema);
+export const userCourseDetailsModel = mongoose.model<UserCourseDetails>(
+  "userCourseDetailsSchema",
+  userCourseDetailsSchema
 );

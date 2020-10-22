@@ -1,13 +1,13 @@
 import * as logger from "../logger/customLogger";
 import { STATUS_CODE_400 } from "../constants/constants";
 import { COURSE_PROGRESS_RETRIEVAL_ERROR, COURSE_PROGRESS_UPDATION_ERROR } from "../constants/errorConstants";
-import { userCourseProgressModel } from "../schema/userCourseProgressSchema";
+import { userCourseDetailsModel } from "../schema/userCourseProgressSchema";
 import CustomError from "../types/CustomError";
-import UserCourseProgress from "../types/UserCourseProgress";
+import UserCourseDetails from "../types/UserCourseDetails";
 
-export default class UserCourseProgressRepository {
-  static async saveUserCourseProgress(userCourseProgress: UserCourseProgress): Promise<any> {
-    const userCourseProgressData = new userCourseProgressModel(userCourseProgress);
+export default class UserCourseDetailsRepository {
+  static async saveUserCourseProgress(userCourseProgress: UserCourseDetails): Promise<any> {
+    const userCourseProgressData = new userCourseDetailsModel(userCourseProgress);
     return new Promise((resolve, reject) => {
       userCourseProgressData.save((error: any, dbResponse: any) => {
         if (error) {
@@ -25,10 +25,10 @@ export default class UserCourseProgressRepository {
     });
   }
 
-  static async updateUserCourseProgress(userCourseProgress: UserCourseProgress): Promise<any> {
+  static async updateUserCourseProgress(userCourseDetails: UserCourseDetails): Promise<any> {
     return new Promise((resolve, reject) => {
-      const filter = { _id: userCourseProgress.id };
-      userCourseProgressModel.update(filter, userCourseProgress, (error: any, dbResponse: any) => {
+      const filter = { _id: userCourseDetails.id };
+      userCourseDetailsModel.update(filter, userCourseDetails, (error: any, dbResponse: any) => {
         if (error) {
           logger.logMessage(error.message);
           const customError = new CustomError(
@@ -46,7 +46,7 @@ export default class UserCourseProgressRepository {
 
   static async getCourseProgressByCourseId(courseId: string, userId: string): Promise<any> {
     return new Promise((resolve, reject) => {
-      userCourseProgressModel
+      userCourseDetailsModel
         .findOne()
         .select({ courseId: 1, currentSectionId: 1, currentLessonId: 1, userId: 1 })
         .where({ courseId: courseId, userId: userId })

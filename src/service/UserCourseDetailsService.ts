@@ -1,21 +1,21 @@
 import SectionRepository from "../repository/SectionRepository";
 import LessonRepository from "../repository/LessonRepository";
 import CourseRepository from "../repository/CourseRepository";
-import UserCourseProgressRepository from "../repository/UserCourseProgressRepository";
-import UserCourseProgress from "../types/UserCourseProgress";
+import UserCourseDetailsRepository from "../repository/UserCourseDetailsRepository";
+import UserCourseDetails from "../types/UserCourseDetails";
 
 const POSITION_ONE = 1;
 const TEST_TENANT_ID = "testTenantId";
 const TEST_USER_ID = "testUserId";
 
-export default class UserCourseProgressService {
+export default class UserCourseDetailsService {
   static async loadfirstPage(courseId: string): Promise<any> {
     const userId = null;
     //@ts-ignore
     return this.loadNextPage(courseId, userId);
   }
 
-  static async loadCurrentPage(userCourseProgress: UserCourseProgress): Promise<any> {
+  static async loadCurrentPage(userCourseDetails: UserCourseDetails): Promise<any> {
     //@ts-ignore
     let courseList = await CourseRepository.getCourseById(userCourseProgress.courseId);
     let courseName = courseList[0].name;
@@ -31,8 +31,8 @@ export default class UserCourseProgressService {
       lessonName: lessonObject.name,
       lessonContents: lessonObject.contents,
       lessonSequence: lessonObject.sequence,
-      courseId: userCourseProgress.courseId,
-      sectionId: userCourseProgress.currentSectionId,
+      courseId: userCourseDetails.courseId,
+      sectionId: userCourseDetails.currentSectionId,
       courseName: courseName,
       sectionName: sectionName,
     };
@@ -79,7 +79,7 @@ export default class UserCourseProgressService {
           nextPosition
         );
         userCourseProgress.currentLessonId = nextLesson._id;
-        let isUpdated = await UserCourseProgressRepository.updateUserCourseProgress(userCourseProgress);
+        let isUpdated = await UserCourseDetailsRepository.updateUserCourseProgress(userCourseProgress);
       } else {
         let nextSectionPosition = sectionObject.sectionNumber + 1;
         let nextSection = await SectionRepository.getSectionByCourseAndPosition(
@@ -93,7 +93,7 @@ export default class UserCourseProgressService {
         );
         userCourseProgress.currentSectionId = nextLesson.sectionId;
         userCourseProgress.currentLessonId = nextLesson._id;
-        let isUpdated = await UserCourseProgressRepository.updateUserCourseProgress(userCourseProgress);
+        let isUpdated = await UserCourseDetailsRepository.updateUserCourseProgress(userCourseProgress);
       }
     }
     //@ts-ignore

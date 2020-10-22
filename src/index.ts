@@ -3,7 +3,7 @@ import * as courseRoutes from "./routes/courseRoutes";
 import * as sectionRoutes from "./routes/sectionRoutes";
 import * as lessonRoutes from "./routes/lessonRoute";
 import * as loginRoutes from "./routes/loginRoutes";
-import * as userCourseProgressRoute from "./routes/userCourseProgressRoute";
+import * as userCourseDetailsRoute from "./routes/UserCourseDetailsRoute";
 import mongoose from "mongoose";
 import * as logger from "./logger/customLogger";
 import bodyParser from "body-parser";
@@ -68,7 +68,7 @@ const init = async () => {
     app.use(lessonRoutes.updateLesson);
     app.use(lessonRoutes.deleteLesson);
 
-    app.use(userCourseProgressRoute.getCourseProgress);
+    app.use(userCourseDetailsRoute.getCourseProgress);
 
     app.listen(port, () => {
       logger.logMessage("The application is listening to port:" + port);

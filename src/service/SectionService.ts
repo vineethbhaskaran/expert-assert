@@ -49,4 +49,12 @@ export default class SectionService {
   static async getLastSectionByCourse(courseId: string): Promise<any> {
     return SectionRepository.getLastSectionByCourse(courseId);
   }
+
+  static async getNextSection(courseId: string, sectionSequence: number): Promise<any> {
+    return SectionRepository.getNextSection(courseId, sectionSequence);
+  }
+
+  static async getPreviousSection(courseId: string, sectionSequence: number): Promise<any> {
+    return SectionRepository.getPreviousSection(courseId, sectionSequence);
+  }
 }

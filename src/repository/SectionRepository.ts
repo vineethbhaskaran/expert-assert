@@ -249,4 +249,55 @@ export default class SectionRepository {
         });
     });
   }
+
+  static async getNextSection(courseId: string, sectionSequence: number): Promise<any> {
+    return new Promise((resolve, reject) => {
+      sectionModel
+        .find()
+        .select({ name: 1, sectionSequence: 1, numberOfLessons: 1, tenantId: 1, courseId: 1, isFinalSection: 1 })
+        .where({ isActive: true, courseId: courseId, sectionSequence: { $gt: sectionSequence } })
+        .limit(1)
+        .sort({ sectionSequence: "asc" })
+        .exec(async (error: any, sections: any) => {
+          if (error) {
+            logger.logMessage(error.message);
+            const sectionRetrieveError = await SectionDBErrorHandler.handleErrors(error.code, SECTION_OPERATION_GET);
+            reject(sectionRetrieveError);
+          }
+
+          let nextSection = null;
+          if (sections.length > 0) {
+            nextSection = sections[0];
+          }
+          //converting list to object
+
+          resolve(nextSection);
+        });
+    });
+  }
+
+  static async getPreviousSection(courseId: string, sectionSequence: number): Promise<any> {
+    return new Promise((resolve, reject) => {
+      sectionModel
+        .find()
+        .select({ name: 1, sectionSequence: 1, numberOfLessons: 1, tenantId: 1, courseId: 1, isFinalSection: 1 })
+        .where({ isActive: true, courseId: courseId, sectionSequence: { $lt: sectionSequence } })
+        .limit(1)
+        .sort({ sectionSequence: "desc" })
+        .exec(async (error: any, sections: any) => {
+          if (error) {
+            logger.logMessage(error.message);
+            const sectionRetrieveError = await SectionDBErrorHandler.handleErrors(error.code, SECTION_OPERATION_GET);
+            reject(sectionRetrieveError);
+          }
+          let prevSection = null;
+          //converting list to object
+          if (sections.length > 0) {
+            prevSection = sections[0];
+          }
+
+          resolve(prevSection);
+        });
+    });
+  }
 }
