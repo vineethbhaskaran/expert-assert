@@ -1,8 +1,13 @@
 import { Router, Request, Response } from "express";
-import SectionService from "../service/SectionService";
 import * as logger from "../logger/customLogger";
 import UserCourseDetailsService from "../service/UserCourseDetailsService";
-import LessonService from "../service/LessonService";
+import courseService from "../service/CourseService";
+import sectionService from "../service/SectionService";
+import lessonService from "../service/LessonService";
+import { CurrentCourseContent } from "../types/CurrentCourseContent";
+import Course from "../types/Course";
+import Section from "../types/Section";
+import Lesson from "../types/Lesson";
 
 const routes = Router();
 
@@ -18,13 +23,45 @@ export const getCourseProgress = routes.get("/courseProgress", async (request: R
   }
 });
 
+export const getCurrentCourseContent = routes.get(
+  "/currentLesson/:courseId/:sectionId/:lessonId",
+  async (request: Request, response: Response) => {
+    const courseId = request.params.courseId;
+    const sectionId = request.params.sectionId;
+    const lessonId = request.params.lessonId;
+
+    try {
+      const course = <Course>await courseService.getCourseById(courseId);
+      const section = <Section>await sectionService.getSectionById(sectionId);
+      const lesson = <Lesson>await lessonService.getLessonById(lessonId);
+
+      let currentCourseContent = new CurrentCourseContent(
+        course.id,
+        course.name,
+        section.id,
+        section.name,
+        lesson.id,
+        lesson.name,
+        lesson.lessonSequence,
+        //@ts-ignore
+        lesson.contents,
+        lesson.isFinalLesson
+      );
+      return response.json(currentCourseContent);
+    } catch (errorResponse) {
+      logger.logMessage(errorResponse);
+      return response.json(errorResponse);
+    }
+  }
+);
+
 //TO BE DELETED: test end points
 export const getNextSection = routes.get("/nextSection", async (request: Request, response: Response) => {
   const courseId = request.query.courseId;
   const sectionSequence = request.query.sectionSequence;
   try {
     //@ts-ignore
-    const nextSection = await SectionService.getNextSection(courseId, sectionSequence);
+    const nextSection = await sectionService.getNextSection(courseId, sectionSequence);
     return response.json(nextSection);
   } catch (errorResponse) {
     logger.logMessage(errorResponse);
@@ -37,7 +74,7 @@ export const getPrevSection = routes.get("/prevSection", async (request: Request
   const sectionSequence = request.query.sectionSequence;
   try {
     //@ts-ignore
-    const previousSection = await SectionService.getPreviousSection(courseId, sectionSequence);
+    const previousSection = await sectionService.getPreviousSection(courseId, sectionSequence);
     return response.json(previousSection);
   } catch (errorResponse) {
     logger.logMessage(errorResponse);
@@ -51,7 +88,7 @@ export const getNextLesson = routes.get("/nextLesson", async (request: Request, 
   const lessonSequence = request.query.lessonSequence;
   try {
     //@ts-ignore
-    const nextLesson = await LessonService.getNextLessonByCourseIdSectionId(courseId, sectionId, lessonSequence);
+    const nextLesson = await lessonService.getNextLessonByCourseIdSectionId(courseId, sectionId, lessonSequence);
     return response.json(nextLesson);
   } catch (errorResponse) {
     logger.logMessage(errorResponse);
@@ -65,7 +102,7 @@ export const getPrevLesson = routes.get("/previousLesson", async (request: Reque
   const lessonSequence = request.query.lessonSequence;
   try {
     //@ts-ignore
-    const nextLesson = await LessonService.getPrevoiusLessonByCourseIdSectionId(courseId, sectionId, lessonSequence);
+    const nextLesson = await lessonService.getPrevoiusLessonByCourseIdSectionId(courseId, sectionId, lessonSequence);
     return response.json(nextLesson);
   } catch (errorResponse) {
     logger.logMessage(errorResponse);
