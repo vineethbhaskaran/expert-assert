@@ -130,12 +130,12 @@ export const LESSON_DEFAULT_ERROR = {
   details: "Generic Error in lesson",
 };
 
-export const COURSE_PROGRESS_UPDATION_ERROR = {
-  label: "COURSE_PROGRESS_UPDATION_ERROR",
-  details: "Error while updating the course progress",
+export const COURSE_DETAILS_UPDATION_ERROR = {
+  label: "COURSE_DETAILS_UPDATION_ERROR",
+  details: "Error while updating the course detail",
 };
 
-export const COURSE_PROGRESS_RETRIEVAL_ERROR = {
-  label: "COURSE_PROGRESS_RETRIEVAL_ERROR",
-  details: "Error while retrieving the course progress",
+export const COURSE_DETAILS_RETRIEVAL_ERROR = {
+  label: "COURSE_DETAILS_RETRIEVAL_ERROR",
+  details: "Error while retrieving the course details",
 };

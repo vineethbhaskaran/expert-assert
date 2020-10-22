@@ -3,12 +3,63 @@ import LessonRepository from "../repository/LessonRepository";
 import CourseRepository from "../repository/CourseRepository";
 import UserCourseDetailsRepository from "../repository/UserCourseDetailsRepository";
 import UserCourseDetails from "../types/UserCourseDetails";
+import { CourseNavigationDetails } from "../types/CourseNavigationDetails";
+import SectionService from "./SectionService";
+import LessonService from "./LessonService";
+import { SEQUENCE_ONE } from "../constants/constants";
 
 const POSITION_ONE = 1;
 const TEST_TENANT_ID = "testTenantId";
 const TEST_USER_ID = "testUserId";
 
 export default class UserCourseDetailsService {
+  /**
+   * Gets current page details:
+   * If UserCourseDetails entry is present use that courseId,sectionId,lessonId
+   * Otherwise use the first section and lesson
+   * @param courseId
+   * @param userId
+   * @returns current page details
+   */
+  static async getCurrentPageDetails(courseId: string, userId: string): Promise<any> {
+    let userCourseDetails = await UserCourseDetailsRepository.getUserCourseDetailByCourseId(courseId, userId);
+    return new Promise(async (resolve, reject) => {
+      if (typeof userCourseDetails !== "undefined" && userCourseDetails !== null) {
+        //First record for course
+        const courseId = userCourseDetails.courseId;
+        const sectionId = userCourseDetails.currentSectionId;
+        const lessonId = userCourseDetails.currentLessonId;
+        let courseNavigationDetails = new CourseNavigationDetails(courseId, sectionId, lessonId);
+        resolve(courseNavigationDetails);
+      } else {
+        //get first section:with seqence 1
+        const section = await SectionService.getSectionByCourseAndSectionSequence(courseId, SEQUENCE_ONE);
+        //get first lesson:with seqence 1
+        const lesson = await LessonService.getLessonsByCourseIdSectionIdLessonSequence(
+          courseId,
+          section.id,
+          SEQUENCE_ONE
+        );
+
+        let newUserCourseProgress = {
+          userId: userId,
+          tenantId: TEST_TENANT_ID,
+          courseId: courseId,
+          currentSectionId: section.id,
+          currentLessonId: lesson.id,
+        };
+
+        //@ts-ignore
+        let isSaved = await UserCourseDetailsRepository.saveUserCourseDetail(newUserCourseProgress);
+
+        let courseNavigationDetails = new CourseNavigationDetails(courseId, section.id, lesson.id);
+
+        resolve(courseNavigationDetails);
+      }
+    });
+  }
+  /*
+  // =========  OLD =========
   static async loadfirstPage(courseId: string): Promise<any> {
     const userId = null;
     //@ts-ignore
@@ -99,6 +150,6 @@ export default class UserCourseDetailsService {
     //@ts-ignore
     let updatedUserCourseProgress = await UserCourseProgressRepository.getCourseProgressByCourseId(courseId, userId);
     return this.loadCurrentPage(updatedUserCourseProgress);
-  }
+  }*/
   static async loadPreviousPage(courseId: string): Promise<any> {}
 }

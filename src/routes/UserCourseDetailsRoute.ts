@@ -23,6 +23,24 @@ export const getCourseProgress = routes.get("/courseProgress", async (request: R
   }
 });
 
+export const getCurrentPageDetails = routes.get(
+  "/getCurrentPageDetails",
+  async (request: Request, response: Response) => {
+    const courseId = request.query.courseId;
+    const userId = request.query.userId;
+    try {
+      //@ts-ignore
+      const userProgress = await UserCourseDetailsService.getCurrentPageDetails(courseId, userId);
+      return response.json(userProgress);
+    } catch (errorResponse) {
+      logger.logMessage(errorResponse);
+      return response.json(errorResponse);
+    }
+  }
+);
+/**
+ * Endpoint for display the course content for student view or
+ */
 export const getCurrentCourseContent = routes.get(
   "/currentLesson/:courseId/:sectionId/:lessonId",
   async (request: Request, response: Response) => {
