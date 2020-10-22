@@ -29,7 +29,8 @@ export default class UserCourseDetailsService {
         const courseId = userCourseDetails.courseId;
         const sectionId = userCourseDetails.currentSectionId;
         const lessonId = userCourseDetails.currentLessonId;
-        let courseNavigationDetails = new CourseNavigationDetails(courseId, sectionId, lessonId);
+        let lesson = <Lesson>await LessonService.getLessonById(lessonId);
+        let courseNavigationDetails = new CourseNavigationDetails(courseId, sectionId, lessonId, lesson.name);
         resolve(courseNavigationDetails);
       } else {
         //get first section:with seqence 1
@@ -52,7 +53,7 @@ export default class UserCourseDetailsService {
         //@ts-ignore
         let isSaved = await UserCourseDetailsRepository.saveUserCourseDetail(newUserCourseProgress);
 
-        let courseNavigationDetails = new CourseNavigationDetails(courseId, section.id, lesson.id);
+        let courseNavigationDetails = new CourseNavigationDetails(courseId, section.id, lesson.id, lesson.name);
 
         resolve(courseNavigationDetails);
       }
@@ -118,7 +119,7 @@ export default class UserCourseDetailsService {
    * @returns
    */
   private static _createCourseNavigationDetails(nextLesson: Lesson) {
-    return new CourseNavigationDetails(nextLesson.courseId, nextLesson.sectionId, nextLesson.id);
+    return new CourseNavigationDetails(nextLesson.courseId, nextLesson.sectionId, nextLesson.id, nextLesson.name);
   }
 
   /*

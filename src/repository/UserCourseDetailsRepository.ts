@@ -37,7 +37,7 @@ export default class UserCourseDetailsRepository {
    */
   static async updateUserCourseDetail(userCourseDetails: UserCourseDetails): Promise<any> {
     return new Promise((resolve, reject) => {
-      const filter = { _id: userCourseDetails.id };
+      const filter = { courseId: userCourseDetails.courseId, userId: userCourseDetails.userId };
       userCourseDetailsModel.update(filter, userCourseDetails, (error: any, dbResponse: any) => {
         if (error) {
           logger.logMessage(error.message);
