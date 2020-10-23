@@ -3,7 +3,7 @@
     "module": "commonjs",
     "esModuleInterop": true,
     "target": "es2019",
-    "lib": ["ES2019"],
+    "lib": ["dom","ES2019"],
     "strict": true,
     "noImplicitAny": true,
     "moduleResolution": "node",

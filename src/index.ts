@@ -12,7 +12,7 @@ import environmentToExport from "./config";
 import jwt from "express-jwt";
 import jwks from "jwks-rsa";
 
-const app = express();
+export const app = express();
 
 const port = environmentToExport.app.port;
 const dbConnectionUrl = environmentToExport.db.dbConnectionUrl;
@@ -81,5 +81,4 @@ const init = async () => {
 const dbConnect = async () => {
   return mongoose.connect(dbConnectionUrl, { useNewUrlParser: true });
 };
-
 init();
