@@ -30,14 +30,28 @@ export const getCurrentPageDetails = routes.get(
     const userId = request.query.userId;
     try {
       //@ts-ignore
-      const userProgress = await UserCourseDetailsService.getCurrentPageDetails(courseId, userId);
-      return response.json(userProgress);
+      const nextPage = await UserCourseDetailsService.getCurrentPageDetails(courseId, userId);
+      return response.json(nextPage);
     } catch (errorResponse) {
       logger.logMessage(errorResponse);
       return response.json(errorResponse);
     }
   }
 );
+export const skipToNextPage = routes.get("/skipToNextPage", async (request: Request, response: Response) => {
+  const courseId = request.query.courseId;
+  const sectionId = request.query.sectionId;
+  const lessonId = request.query.lessonId;
+  const userId = request.query.userId;
+  try {
+    //@ts-ignore
+    const userDetails = await UserCourseDetailsService.skipToNextPage(courseId, sectionId, lessonId, userId);
+    return response.json(userDetails);
+  } catch (errorResponse) {
+    logger.logMessage(errorResponse);
+    return response.json(errorResponse);
+  }
+});
 
 export const getNextPageDetails = routes.get("/getNextPageDetails", async (request: Request, response: Response) => {
   const courseId = request.query.courseId;

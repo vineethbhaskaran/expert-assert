@@ -100,6 +100,49 @@ export default class UserCourseDetailsService {
   }
 
   /**
+   * TODO:merge this to next page method only difference is update operation is not present
+   * Skips to next page details
+   * @param courseId
+   * @param sectionId
+   * @param lessonId
+   * @param userId
+   * @returns to next page details
+   */
+  static async skipToNextPage(courseId: string, sectionId: string, lessonId: string, userId: string): Promise<any> {
+    return new Promise(async (resolve, reject) => {
+      let lesson = <Lesson>await LessonService.getLessonById(lessonId);
+
+      if (lesson.isFinalLesson === false) {
+        let nextLesson = <Lesson>(
+          await LessonService.getNextLessonByCourseIdSectionId(lesson.courseId, lesson.sectionId, lesson.lessonSequence)
+        );
+        //send details to redirect to display age content
+        let courseNavigationDetails = UserCourseDetailsService._createCourseNavigationDetails(nextLesson);
+        resolve(courseNavigationDetails);
+      } else {
+        let currentSection = <Section>await SectionService.getSectionById(sectionId);
+        if (currentSection.isFinalSection === true) {
+          //TODO:End of the course
+        } else {
+          let nextSection = <Section>(
+            await SectionService.getNextSection(currentSection.courseId, currentSection.sectionSequence)
+          );
+          //first lesson of next section
+          let nextLesson = await LessonService.getLessonsByCourseIdSectionIdLessonSequence(
+            nextSection.courseId,
+            nextSection.id,
+            SEQUENCE_ONE
+          );
+
+          //send details to redirect to display age content
+          let courseNavigationDetails = UserCourseDetailsService._createCourseNavigationDetails(nextLesson);
+          resolve(courseNavigationDetails);
+        }
+      }
+    });
+  }
+
+  /**
    * Gets previous page details
    * @param courseId
    * @param sectionId
