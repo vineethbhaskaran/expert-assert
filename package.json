@@ -10,7 +10,7 @@
     "rimraf": "./node_modules/rimraf/bin.js",
     "clean": "rimraf ./dist/*",
     "generate-schema": "ts-node ./schema-generator.ts",
-    "test": "mocha -r ts-node/register test/*.ts" 
+    "test": "mocha -r ts-node/register test/*.ts --exit" 
   },
   "author": "vineeth bhaskaran",
   "license": "ISC",
