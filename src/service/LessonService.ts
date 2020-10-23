@@ -50,6 +50,10 @@ export default class LessonService {
     return LessonRepository.getLastLessonByCourseIdSectionId(courseId, sectionId);
   }
 
+  static async getFirstLessonByCourseIdSectionId(courseId: string, sectionId: string): Promise<any> {
+    return LessonRepository.getFirstLessonByCourseIdSectionId(courseId, sectionId);
+  }
+
   static async getNextLessonByCourseIdSectionId(
     courseId: string,
     sectionId: string,

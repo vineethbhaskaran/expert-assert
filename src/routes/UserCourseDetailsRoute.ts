@@ -53,6 +53,29 @@ export const getNextPageDetails = routes.get("/getNextPageDetails", async (reque
     return response.json(errorResponse);
   }
 });
+
+export const getPreviousPageDetails = routes.get(
+  "/getPreviousPageDetails",
+  async (request: Request, response: Response) => {
+    const courseId = request.query.courseId;
+    const sectionId = request.query.sectionId;
+    const lessonId = request.query.lessonId;
+    const userId = request.query.userId;
+    try {
+      const prevPageDetails = await UserCourseDetailsService.getPreviousPageDetails(
+        //@ts-ignore
+        courseId,
+        sectionId,
+        lessonId,
+        userId
+      );
+      return response.json(prevPageDetails);
+    } catch (errorResponse) {
+      logger.logMessage(errorResponse);
+      return response.json(errorResponse);
+    }
+  }
+);
 /**
  * Endpoint for display the course content for student view or
  */

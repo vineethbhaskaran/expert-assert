@@ -11,6 +11,7 @@ import {
   STATUS_CODE_400,
 } from "../constants/constants";
 import { SectionDBErrorHandler } from "../errorHandler/SectionDBErrorHandler";
+import { NO_DATA_FOUND } from "../constants/ErrorCodes";
 
 export default class SectionRepository {
   /**
@@ -33,7 +34,10 @@ export default class SectionRepository {
         .exec(async (error: any, sections: any) => {
           if (error) {
             logger.logMessage(error.message);
-            const sectionRetrieveError = await SectionDBErrorHandler.handleErrors(error.code, SECTION_OPERATION_GET);
+            const sectionRetrieveError = await SectionDBErrorHandler.handleErrors(
+              error.code.toString(),
+              SECTION_OPERATION_GET
+            );
             reject(sectionRetrieveError);
           }
           resolve(sections);
@@ -55,7 +59,10 @@ export default class SectionRepository {
         .exec(async (error: any, sections: any) => {
           if (error) {
             logger.logMessage(error.message);
-            const sectionRetrieveError = await SectionDBErrorHandler.handleErrors(error.code, SECTION_OPERATION_GET);
+            const sectionRetrieveError = await SectionDBErrorHandler.handleErrors(
+              error.code.toString(),
+              SECTION_OPERATION_GET
+            );
             reject(sectionRetrieveError);
           }
           resolve(sections);
@@ -74,7 +81,10 @@ export default class SectionRepository {
       sectionData.save(async (error: any, dbResponse: any) => {
         if (error) {
           logger.logMessage(error.message);
-          const sectionCreationError = await SectionDBErrorHandler.handleErrors(error.code, SECTION_OPERATION_CREATE);
+          const sectionCreationError = await SectionDBErrorHandler.handleErrors(
+            error.code.toString(),
+            SECTION_OPERATION_CREATE
+          );
           reject(sectionCreationError);
         }
         logger.logMessage("Respone from DB=" + JSON.stringify(dbResponse, null, 2));
@@ -94,7 +104,10 @@ export default class SectionRepository {
       sectionModel.update(filter, section, async (error: any, dbResponse: any) => {
         if (error) {
           logger.logMessage(error.message);
-          const sectionUpdationError = await SectionDBErrorHandler.handleErrors(error.code, SECTION_OPERATION_UPDATE);
+          const sectionUpdationError = await SectionDBErrorHandler.handleErrors(
+            error.code.toString(),
+            SECTION_OPERATION_UPDATE
+          );
           reject(sectionUpdationError);
         }
         logger.logMessage("Respone from DB=" + JSON.stringify(dbResponse, null, 2));
@@ -114,7 +127,10 @@ export default class SectionRepository {
       sectionModel.findOneAndUpdate(filter, { isActive: false }, async (error: any, dbResponse: any) => {
         if (error) {
           logger.logMessage(error.message);
-          const sectionDeletionError = await SectionDBErrorHandler.handleErrors(error.code, SECTION_OPERATION_DELETE);
+          const sectionDeletionError = await SectionDBErrorHandler.handleErrors(
+            error.code.toString(),
+            SECTION_OPERATION_DELETE
+          );
           reject(sectionDeletionError);
         }
         logger.logMessage("Respone from DB=" + JSON.stringify(dbResponse, null, 2));
@@ -148,7 +164,10 @@ export default class SectionRepository {
         .exec(async (error: any, sections: any) => {
           if (error) {
             logger.logMessage(error.message);
-            const sectionRetrieveError = await SectionDBErrorHandler.handleErrors(error.code, SECTION_OPERATION_GET);
+            const sectionRetrieveError = await SectionDBErrorHandler.handleErrors(
+              error.code.toString(),
+              SECTION_OPERATION_GET
+            );
             reject(sectionRetrieveError);
           }
           resolve(sections);
@@ -172,7 +191,10 @@ export default class SectionRepository {
         .exec(async (error: any, sections: any) => {
           if (error) {
             logger.logMessage(error.message);
-            const sectionRetrieveError = await SectionDBErrorHandler.handleErrors(error.code, SECTION_OPERATION_GET);
+            const sectionRetrieveError = await SectionDBErrorHandler.handleErrors(
+              error.code.toString(),
+              SECTION_OPERATION_GET
+            );
             reject(sectionRetrieveError);
           }
           resolve(sections);
@@ -240,12 +262,48 @@ export default class SectionRepository {
         .exec(async (error: any, sections: any) => {
           if (error) {
             logger.logMessage(error.message);
-            const sectionRetrieveError = await SectionDBErrorHandler.handleErrors(error.code, SECTION_OPERATION_GET);
+            const sectionRetrieveError = await SectionDBErrorHandler.handleErrors(
+              error.code.toString(),
+              SECTION_OPERATION_GET
+            );
+            reject(sectionRetrieveError);
+          } else {
+            let lastSection = sections[0];
+            resolve(lastSection);
+          }
+        });
+    });
+  }
+
+  /**
+   * Gets first section by course
+   * @param courseId
+   * @returns first section by course
+   */
+  static async getFirstSectionByCourse(courseId: string): Promise<any> {
+    return new Promise((resolve, reject) => {
+      sectionModel
+        .find()
+        .select({ name: 1, sectionSequence: 1, numberOfLessons: 1, tenantId: 1, courseId: 1, isFinalSection: 1 })
+        .where({ isActive: true, courseId: courseId })
+        .limit(1)
+        .sort({ sectionSequence: "asc" })
+        .exec(async (error: any, sections: any) => {
+          if (error) {
+            logger.logMessage(error.message);
+            const sectionRetrieveError = await SectionDBErrorHandler.handleErrors(
+              error.code.toString(),
+              SECTION_OPERATION_GET
+            );
+            reject(sectionRetrieveError);
+          } else if (sections.length > 0) {
+            let firstSection = sections[0];
+            resolve(firstSection);
+          } else {
+            const sectionRetrieveError = await SectionDBErrorHandler.handleErrors(NO_DATA_FOUND, SECTION_OPERATION_GET);
             reject(sectionRetrieveError);
           }
           //converting list to object
-          let lastSection = sections[0];
-          resolve(lastSection);
         });
     });
   }
@@ -261,7 +319,10 @@ export default class SectionRepository {
         .exec(async (error: any, sections: any) => {
           if (error) {
             logger.logMessage(error.message);
-            const sectionRetrieveError = await SectionDBErrorHandler.handleErrors(error.code, SECTION_OPERATION_GET);
+            const sectionRetrieveError = await SectionDBErrorHandler.handleErrors(
+              error.code.toString(),
+              SECTION_OPERATION_GET
+            );
             reject(sectionRetrieveError);
           } else if (sections.length > 0) {
             let nextSection = sections[0];
@@ -289,7 +350,10 @@ export default class SectionRepository {
         .exec(async (error: any, sections: any) => {
           if (error) {
             logger.logMessage(error.message);
-            const sectionRetrieveError = await SectionDBErrorHandler.handleErrors(error.code, SECTION_OPERATION_GET);
+            const sectionRetrieveError = await SectionDBErrorHandler.handleErrors(
+              error.code.toString(),
+              SECTION_OPERATION_GET
+            );
             reject(sectionRetrieveError);
           } else if (sections.length > 0) {
             let prevSection = sections[0];

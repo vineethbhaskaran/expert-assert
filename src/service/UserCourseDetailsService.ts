@@ -9,6 +9,7 @@ import LessonService from "./LessonService";
 import { SEQUENCE_ONE } from "../constants/constants";
 import Lesson from "../types/Lesson";
 import Section from "../types/Section";
+import CourseService from "./courseService";
 
 const TEST_TENANT_ID = "testTenantId";
 
@@ -97,6 +98,46 @@ export default class UserCourseDetailsService {
       }
     });
   }
+
+  /**
+   * Gets previous page details
+   * @param courseId
+   * @param sectionId
+   * @param lessonId
+   * @param userId
+   * @returns previous page details
+   */
+  static async getPreviousPageDetails(
+    currentCourseId: string,
+    currentSectionId: string,
+    currentLessonId: string,
+    userId: string
+  ): Promise<any> {
+    const currentCourse = await CourseService.getCourseById(currentCourseId);
+    const currentSection = await SectionService.getSectionById(currentSectionId);
+    const currentLesson = await LessonService.getLessonById(currentLessonId);
+    const firstLesson = await LessonService.getFirstLessonByCourseIdSectionId(currentCourseId, currentSectionId);
+    const firstSection = await SectionService.getFirstSectionByCourse(currentCourseId);
+    if (currentLessonId === firstLesson.id) {
+      if (currentSectionId === firstSection.id) {
+        //END OF previous flow since this is first section first lesson
+      } else {
+        const prevSection = await SectionService.getPreviousSection(currentCourseId, currentSection.sectionSequence);
+        //last lesson of prev section
+        const prevLesson = await LessonService.getLastLessonByCourseIdSectionId(prevSection.courseId, prevSection.id);
+        let courseNavigationDetails = UserCourseDetailsService._createCourseNavigationDetails(prevLesson);
+        return courseNavigationDetails;
+      }
+    } else {
+      const prevLesson = await LessonService.getPrevoiusLessonByCourseIdSectionId(
+        currentCourseId,
+        currentSectionId,
+        currentLesson.lessonSequence
+      );
+      let courseNavigationDetails = UserCourseDetailsService._createCourseNavigationDetails(prevLesson);
+      return courseNavigationDetails;
+    }
+  }
   /**
    * Updates user course details
    * @param userId
@@ -118,8 +159,8 @@ export default class UserCourseDetailsService {
    * @param nextLesson
    * @returns
    */
-  private static _createCourseNavigationDetails(nextLesson: Lesson) {
-    return new CourseNavigationDetails(nextLesson.courseId, nextLesson.sectionId, nextLesson.id, nextLesson.name);
+  private static _createCourseNavigationDetails(lesson: Lesson) {
+    return new CourseNavigationDetails(lesson.courseId, lesson.sectionId, lesson.id, lesson.name);
   }
 
   /*

@@ -15,8 +15,8 @@ import {
 import CustomError from "../types/CustomError";
 
 export class SectionDBErrorHandler {
-  static async handleErrors(mongoErrorCode: number, operationType: string): Promise<any> {
-    switch (mongoErrorCode) {
+  static async handleErrors(errorCode: string, operationType: string): Promise<any> {
+    switch (errorCode) {
       default:
         return this._getDefaultSectionErrors(operationType);
     }
