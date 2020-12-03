@@ -120,10 +120,11 @@ export const updateLesson = lessonRoutes.put("/lessons/:lessonId", async (reques
   lesson.id = request.params.lessonId;
   try {
     const currentLesson = await LessonService.getLessonById(lesson.id);
+    //updating the lesson sequence
     if (typeof lesson.lessonSequence !== "undefined" && lesson.lessonSequence !== null) {
       currentLesson.lessonSequence = lesson.lessonSequence;
+      await LessonHelper.validateLessonSeqence(currentLesson);
     }
-    await LessonHelper.validateLessonSeqence(currentLesson);
 
     //BEFORE SAVING: set last section final as false
     let lastLesson = await LessonService.getLastLessonByCourseIdSectionId(
